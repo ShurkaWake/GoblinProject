@@ -1,12 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DataAccess.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess
 {
-    internal class ApplicationContext
+    public class ApplicationContext : IdentityDbContext<AppUser, AppRole, string>
     {
+        public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options) 
+        {
+        }
+
+        public DbSet<Business> Businesses { get; set; }
+
+        public DbSet<Measurement> Measurements { get; set; }
+
+        public DbSet<Resource> Resources { get; set; }
+
+        public DbSet<Scales> Scales { get; set; }
+
+        public DbSet<WorkingShift> WorkingShifts { get; set;}
     }
 }
