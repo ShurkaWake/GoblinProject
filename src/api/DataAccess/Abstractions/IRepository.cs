@@ -3,7 +3,9 @@ using AutoFilterer.Types;
 
 namespace DataAccess.Abstractions
 {
-    public interface IRepository<TEntity> where TEntity : IEntity<string>
+    public interface IRepository<TEntity, TKey> 
+        where TEntity : IEntity<TKey> 
+        where TKey : IComparable<TKey>
     {
         Task<TEntity> GetAsync(string id);
 

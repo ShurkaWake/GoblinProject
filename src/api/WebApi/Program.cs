@@ -1,22 +1,24 @@
 using System.Text.Json.Serialization;
+using BusinessLogic.Options;
 using DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
 var builder = WebApplication.CreateBuilder(args);
+var services = builder.Services;
+var configuration = builder.Configuration;
 
 // Add services to the container.
 
-builder.Services
+services
     .AddControllersWithViews()
     .AddJsonOptions(options => 
 {
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 });
 
-
 string connectionString = builder.Configuration["DbConnectionString"];
-builder.Services.AddDbContext<ApplicationContext>(options =>
+services.AddDbContext<ApplicationContext>(options =>
 {
     options.UseNpgsql(connectionString, options =>
     {
@@ -24,9 +26,14 @@ builder.Services.AddDbContext<ApplicationContext>(options =>
     });
 });
 
+services.Configure<SeederOptions>(
+    configuration.GetSection(SeederOptions.Section));
+services.Configure<JwtOptions>(
+    configuration.GetSection(JwtOptions.Section));
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+services.AddEndpointsApiExplorer();
+services.AddSwaggerGen();
 
 var app = builder.Build();
 
