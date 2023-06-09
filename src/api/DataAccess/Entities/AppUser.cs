@@ -5,9 +5,9 @@ namespace DataAccess.Entities
 {
     public class AppUser : IdentityUser, IEntity<string>
     {
-        public AppRole Role { get; set; }
-
         public Business Job { get; set; }
+
+        public string FullName { get; set; }
 
         public IEnumerable<WorkingShift>? WorkingShifts { get; set;}
     }

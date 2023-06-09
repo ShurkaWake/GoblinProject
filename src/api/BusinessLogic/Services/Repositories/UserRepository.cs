@@ -1,11 +1,12 @@
-﻿using DataAccess;
+﻿using BusinessLogic.Abstractions;
+using DataAccess;
 using DataAccess.Abstractions;
 using DataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace BusinessLogic.Services.Repositories
 {
-    public class UserRepository : Repository<AppUser, string>, IUserRepository
+    public sealed class UserRepository : Repository<AppUser, string>, IUserRepository
     {
         public UserRepository(ApplicationContext context) : base(context) { }
 

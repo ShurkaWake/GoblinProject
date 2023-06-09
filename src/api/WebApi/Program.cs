@@ -1,8 +1,14 @@
 using System.Text.Json.Serialization;
+using AutoMapper;
+using BusinessLogic.Abstractions;
+using BusinessLogic.Mapping;
 using BusinessLogic.Options;
 using DataAccess;
+using DataAccess.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
+using WebApi.Extenstions;
+using WebApi.Mapping;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -25,17 +31,45 @@ services.AddDbContext<ApplicationContext>(options =>
         options.MigrationsAssembly(typeof(ApplicationContext).Assembly.FullName);
     });
 });
+services
+    .AddIdentity<AppUser, AppRole>()
+    .AddEntityFrameworkStores<ApplicationContext>()
+    .AddDefaultTokenProviders();
 
 services.Configure<SeederOptions>(
     configuration.GetSection(SeederOptions.Section));
 services.Configure<JwtOptions>(
     configuration.GetSection(JwtOptions.Section));
 
+services.AddBusinessLogicServices();
+services.AddBearerAuthentication();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
+services.AddSwagger();
+
+var mapperConfig = new MapperConfiguration(mc =>
+{
+    mc.AddProfile(new ApiProfile());
+    mc.AddProfile(new BusinessProfile());
+});
+
+services.AddSingleton(mapperConfig.CreateMapper());
+
+services.AddCors(c =>
+{
+    c.AddPolicy("DefaultPolicy", p =>
+    {
+        p.AllowAnyMethod();
+        p.AllowAnyOrigin();
+        p.AllowAnyHeader();
+    });
+});
 
 var app = builder.Build();
+
+await app.Services.CreateScope().ServiceProvider.GetRequiredService<ISeeder>().SeedAsync();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

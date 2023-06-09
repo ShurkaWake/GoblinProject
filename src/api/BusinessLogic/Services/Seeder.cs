@@ -1,11 +1,14 @@
-﻿using BusinessLogic.Core;
+﻿using BusinessLogic.Abstractions;
+using BusinessLogic.Core;
 using BusinessLogic.Options;
-using BusinessLogic.Services.Abstractions;
+using DataAccess;
+using DataAccess.Abstractions;
 using DataAccess.Entities;
 using FluentResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using System.Data;
 
 namespace BusinessLogic.Services
@@ -15,12 +18,19 @@ namespace BusinessLogic.Services
         private readonly UserManager<AppUser> _userManager;
         private readonly RoleManager<AppRole> _roleManager;
         private readonly SeederOptions _settings;
+        private readonly IBusinessRepository _repository;
 
-        public Seeder(UserManager<AppUser> userManager, RoleManager<AppRole> roleManager, SeederOptions settings)
+        public Seeder(
+            UserManager<AppUser> userManager, 
+            RoleManager<AppRole> roleManager, 
+            IOptions<SeederOptions> settings,
+            IBusinessRepository repository
+            )
         {
             _userManager = userManager;
             _roleManager = roleManager;
-            _settings = settings;
+            _settings = settings.Value;
+            _repository = repository;
         }
 
         public async Task<Result> SeedAsync()
@@ -31,12 +41,32 @@ namespace BusinessLogic.Services
         private async Task<Result> SeedAdminAndRoles()
         {
             var admin = await _userManager.Users
-                        .Where(u => u.NormalizedUserName == _settings.AdminLogin.ToUpper())
+                        .Where(u => u.Email == _settings.AdminEmail)
                         .FirstOrDefaultAsync();
 
             if (admin is null)
             {
-                admin = new AppUser { UserName = _settings.AdminLogin, Email = _settings.AdminEmail, EmailConfirmed = true };
+                var business = new Business {
+                    Name = "Goblin Project"
+                };
+
+                try
+                {
+                    await _repository.AddAsync(business);
+                }
+                catch (Exception ex)
+                {
+                    return Result.Fail(ex.Message);
+                }
+
+                admin = new AppUser
+                {
+                    UserName = _settings.AdminLogin,
+                    Email = _settings.AdminEmail,
+                    EmailConfirmed = true,
+                    FullName = "Goblin Admin",
+                    Job = business,
+                };
 
                 var adminResult = await _userManager.CreateAsync(admin, _settings.AdminPassword);
 

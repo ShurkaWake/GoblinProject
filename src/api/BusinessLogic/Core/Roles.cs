@@ -8,6 +8,8 @@
 
         public const string Foreman = "foreman";
 
-        public static string[] AllowedRoles => new [] { Admin, Manager, Foreman };
+        public const string Owner = "owner";
+
+        public static string[] AllowedRoles => new [] { Admin, Owner, Manager, Foreman };
     }
 }

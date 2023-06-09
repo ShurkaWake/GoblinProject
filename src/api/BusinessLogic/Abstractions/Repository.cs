@@ -5,7 +5,7 @@ using DataAccess.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace BusinessLogic.Services.Repositories
+namespace BusinessLogic.Abstractions
 {
     public abstract class Repository<TEntity, TKey> : IRepository<TEntity, TKey>
         where TEntity : class, IEntity<TKey>

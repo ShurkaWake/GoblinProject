@@ -1,6 +1,6 @@
 ﻿using FluentResults;
 
-namespace BusinessLogic.Services.Abstractions
+namespace BusinessLogic.Abstractions
 {
     public interface ISeeder
     {
