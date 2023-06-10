@@ -40,6 +40,8 @@ services.Configure<SeederOptions>(
     configuration.GetSection(SeederOptions.Section));
 services.Configure<JwtOptions>(
     configuration.GetSection(JwtOptions.Section));
+services.Configure<EmailOptions>(
+    configuration.GetSection(EmailOptions.Section));
 
 services.AddBusinessLogicServices();
 services.AddBearerAuthentication();

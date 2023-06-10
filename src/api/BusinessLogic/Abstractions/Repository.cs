@@ -62,10 +62,5 @@ namespace BusinessLogic.Abstractions
 
         public async Task<int> ConfirmAsync() =>
             await Context.SaveChangesAsync();
-
-        public Task<TEntity> GetAsync(string id)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

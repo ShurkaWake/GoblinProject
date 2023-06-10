@@ -8,6 +8,8 @@ namespace DataAccess.Entities
 
         public string Name { get; set; }
 
+        public string Location { get; set; }
+
         public IEnumerable<AppUser>? Users { get; set; }
 
         public IEnumerable<WorkingShift>? WorkingShifts { get; set; }

@@ -53,6 +53,7 @@ namespace BusinessLogic.Services
                 try
                 {
                     await _repository.AddAsync(business);
+                    await _repository.ConfirmAsync();
                 }
                 catch (Exception ex)
                 {

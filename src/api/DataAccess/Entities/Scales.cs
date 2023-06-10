@@ -11,9 +11,5 @@ namespace DataAccess.Entities
         public Business Business { get; set; }
 
         public IEnumerable<Measurement> Measurements { get; set; }
-
-        public string WlanName { get; set; }
-
-        public string WlanPassword { get; set; }
     }
 }
