@@ -15,19 +15,16 @@ namespace BusinessLogic.Services
     public class BusinessService : IBusinessService
     {
         private readonly IBusinessRepository _repository;
-        private readonly UserManager<AppUser> _userManager;
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
 
         public BusinessService(
-            IBusinessRepository repository, 
-            UserManager<AppUser> userManager,
+            IBusinessRepository repository,
             IUserRepository userRepository, 
             IMapper mapper
             )
         {
             _repository = repository;
-            _userManager = userManager;
             _userRepository = userRepository;
             _mapper = mapper;
         }
@@ -63,25 +60,8 @@ namespace BusinessLogic.Services
             return Result.Ok(response);
         }
 
-        public async Task<Result<int>> DeleteAsync(string userId, int id)
+        public async Task<Result<int>> DeleteAsync(int id)
         {
-            var user = await _userRepository.GetAsync(userId);
-            if (user is null)
-            {
-                return Result.Fail("User not found");
-            }
-
-            var roles = await _userManager.GetRolesAsync(user);
-            var role = roles.FirstOrDefault();
-            if (role is null)
-            {
-                return Result.Fail("Failed to check the claims, user doesn't have Role");
-            }
-            if (role != Roles.Admin)
-            {
-                return Result.Fail("No rights");
-            }
-
             var business = await _repository.GetAsync(id);
             if (business is null)
             {
@@ -105,25 +85,8 @@ namespace BusinessLogic.Services
             return Result.Ok(business.Id);
         }
 
-        public async Task<Result<IEnumerable<BusinessViewModel>>> GetAllBusinessesAsync(string userId, BusinessFilter filter = null)
+        public async Task<Result<IEnumerable<BusinessViewModel>>> GetAllBusinessesAsync(BusinessFilter filter = null)
         {
-            var user = await _userRepository.GetAsync(userId);
-            if (user is null)
-            {
-                return Result.Fail("User not found");
-            }
-
-            var roles = await _userManager.GetRolesAsync(user);
-            var role = roles.FirstOrDefault();
-            if (role is null)
-            {
-                return Result.Fail("Failed to check the claims, user doesn't have Role");
-            }
-            if (role != Roles.Admin)
-            {
-                return Result.Fail("No rights");
-            }
-
             IEnumerable<Business> businesses;
             try
             {
@@ -160,21 +123,6 @@ namespace BusinessLogic.Services
             }
 
             var user = await _userRepository.GetUserIncludingJob(userId);
-            if (user is null)
-            {
-                return Result.Fail("User not found");
-            }
-
-            var roles = await _userManager.GetRolesAsync(user);
-            var role = roles.FirstOrDefault();
-            if (role is null)
-            {
-                return Result.Fail("Failed to check the claims, user doesn't have Role");
-            }
-            if (role != Roles.Owner || role != Roles.Admin)
-            {
-                return Result.Fail("No rights");
-            }
 
             var business = await _repository.GetAsync(user.Job.Id);
             if (business is null)

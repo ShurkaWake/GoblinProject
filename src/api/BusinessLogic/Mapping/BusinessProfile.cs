@@ -11,6 +11,7 @@ namespace BusinessLogic.Mapping
         {
             CreateMap<AppUser, UserAuthModel>();
             CreateMap<AppUser, UserViewModel>();
+            CreateMap<AppUser, UserCreateModel>();
             CreateMap<Business, BusinessCreateModel>();
             CreateMap<Business, BusinessViewModel>();
             CreateMap<Business, BusinessUpdateModel>();
