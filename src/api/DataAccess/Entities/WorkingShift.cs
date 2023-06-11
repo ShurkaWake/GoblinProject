@@ -14,7 +14,7 @@ namespace DataAccess.Entities
 
         public DateTime? End { get; set; }
 
-        public IEnumerable<Resource>? UsedResources { get; set; }
+        public ICollection<Resource>? UsedResources { get; set; }
 
         public Measurement? Measurement { get; set; }
     }

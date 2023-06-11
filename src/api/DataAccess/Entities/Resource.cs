@@ -12,7 +12,12 @@ namespace DataAccess.Entities
         public string Description { get; set; }
 
         public Business Business { get; set; }
-        
-        public ResourceStatus status { get; set; }
+
+        /// <summary>
+        /// Ammortization per hour of work
+        /// </summary>
+        public MoneyAmount Ammortization { get; set; }
+
+        public ResourceStatus status { get; set; } = ResourceStatus.Free;
     }
 }

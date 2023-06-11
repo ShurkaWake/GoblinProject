@@ -9,6 +9,6 @@ namespace DataAccess.Entities
 
         public string FullName { get; set; }
 
-        public IEnumerable<WorkingShift>? WorkingShifts { get; set;}
+        public ICollection<WorkingShift>? WorkingShifts { get; set;}
     }
 }

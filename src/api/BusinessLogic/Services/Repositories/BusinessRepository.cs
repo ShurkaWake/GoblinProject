@@ -8,7 +8,13 @@ namespace BusinessLogic.Services.Repositories
 {
     public sealed class BusinessRepository : Repository<Business, int>, IBusinessRepository
     {
-        public BusinessRepository(ApplicationContext context) : base(context) { }
+        private readonly IUserRepository _userRepository;
+
+        public BusinessRepository(ApplicationContext context, IUserRepository userRepository) 
+            : base(context) 
+        {
+            _userRepository = userRepository;
+        }
 
         public DbSet<Business> Businesses => Context.Businesses; 
 
@@ -21,6 +27,17 @@ namespace BusinessLogic.Services.Repositories
                 .Include(x => x.WorkingShifts)
                 .ThenInclude(x => x.UsedResources)
                 .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<Business> GetUserBusinessIncludingAll(string userId)
+        {
+            var user = await _userRepository.GetUserIncludingJob(userId);
+            if (user == null || user.Job == null)
+            {
+                return null;
+            }
+
+            return await GetBusinessIncludingAll(user.Job.Id);
         }
     }
 }

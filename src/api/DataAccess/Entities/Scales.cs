@@ -10,6 +10,6 @@ namespace DataAccess.Entities
 
         public Business Business { get; set; }
 
-        public IEnumerable<Measurement> Measurements { get; set; }
+        public ICollection<Measurement> Measurements { get; set; }
     }
 }

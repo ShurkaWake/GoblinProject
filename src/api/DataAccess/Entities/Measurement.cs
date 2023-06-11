@@ -14,10 +14,5 @@ namespace DataAccess.Entities
         public decimal Weight { get; set; }
 
         public DateTime DateTime { get; set; }
-
-        /// <summary>
-        /// Ammortization per hour of work
-        /// </summary>
-        public MoneyAmount Ammortization { get; set; }
     }
 }

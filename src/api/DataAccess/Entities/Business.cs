@@ -10,12 +10,12 @@ namespace DataAccess.Entities
 
         public string Location { get; set; }
 
-        public IEnumerable<AppUser>? Users { get; set; }
+        public ICollection<AppUser>? Users { get; set; }
 
-        public IEnumerable<WorkingShift>? WorkingShifts { get; set; }
+        public ICollection<WorkingShift>? WorkingShifts { get; set; }
         
-        public IEnumerable<Scales>? Scales { get; set; }
+        public ICollection<Scales>? Scales { get; set; }
 
-        public IEnumerable<Resource>? Resources { get; set; }
+        public ICollection<Resource>? Resources { get; set; }
     }
 }
