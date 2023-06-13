@@ -6,6 +6,8 @@
 
         public string ForemanId { get; set; }
 
+        public string Hash { get; set; }
+
         public int BusinessId { get; set; }
 
         public DateTime Start { get; set; }

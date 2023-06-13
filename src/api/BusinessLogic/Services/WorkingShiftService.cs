@@ -10,7 +10,6 @@ using DataAccess.Entities;
 using DataAccess.Enums;
 using FluentResults;
 using Microsoft.AspNetCore.Identity;
-using System.Reflection.Metadata.Ecma335;
 
 namespace BusinessLogic.Services
 {
@@ -20,17 +19,20 @@ namespace BusinessLogic.Services
         private readonly IUserRepository _userRepository;
         private readonly UserManager<AppUser> _userManager;
         private readonly IMapper _mapper;
+        private readonly IHashService _hashService;
 
         public WorkingShiftService(
             IBusinessRepository businessRepository, 
             IUserRepository userRepository, 
             UserManager<AppUser> userManager, 
-            IMapper mapper)
+            IMapper mapper,
+            IHashService hashService)
         {
             _businessRepository = businessRepository;
             _userRepository = userRepository;
             _userManager = userManager;
             _mapper = mapper;
+            _hashService = hashService;
         }
 
         public async Task<Result> AddResourceAsync(string userId, int workingShiftId, int resourceId)
@@ -102,8 +104,10 @@ namespace BusinessLogic.Services
             };
 
             business.WorkingShifts.Add(workingShift);
+            var response = _mapper.Map<WorkingShiftViewModel>(workingShift);
+            response.Hash = _hashService.Hash(workingShift.Id, 6);
             return (await _businessRepository.ConfirmAsync()) > 0
-                ? Result.Ok()
+                ? Result.Ok(response)
                 : Result.Fail("Failed to save working shift");
         }
 
@@ -191,8 +195,13 @@ namespace BusinessLogic.Services
             }
 
             var workingShift = job.WorkingShifts.AsQueryable().ApplyFilter(filter);
+            var response = _mapper.Map<IEnumerable<WorkingShift>, IEnumerable<WorkingShiftViewModel>>(workingShift);
+            foreach (var item in response)
+            {
+                item.Hash = _hashService.Hash(item.Id, 6);
+            }
 
-            return Result.Ok(_mapper.Map<IEnumerable<WorkingShift>, IEnumerable<WorkingShiftViewModel>>(workingShift));
+            return Result.Ok(response);
         }
 
         public async Task<Result<WorkingShiftViewModel>> GetWorkingShiftAsync(string userId, int shiftId)
@@ -208,8 +217,10 @@ namespace BusinessLogic.Services
             {
                 return Result.Fail("Working shift not found");
             }
+            var response = _mapper.Map<WorkingShiftViewModel>(workingShift);
+            response.Hash = _hashService.Hash(workingShift.Id, 6);
 
-            return Result.Ok(_mapper.Map<WorkingShiftViewModel>(workingShift));
+            return Result.Ok();
         }
 
         private async Task<Result> IsForemanAndWorkerOf(string userId, int businessId)
