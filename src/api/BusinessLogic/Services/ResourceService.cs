@@ -16,9 +16,15 @@ namespace BusinessLogic.Services
         private readonly IBusinessRepository _businessRepository;
         private readonly IMapper _mapper;
 
+        public ResourceService(IBusinessRepository businessRepository, IMapper mapper)
+        {
+            _businessRepository = businessRepository;
+            _mapper = mapper;
+        }
+
         public async Task<Result<ResourceViewModel>> CreateResourceAsync(string userId, ResourceCreateModel model)
         {
-            var validator = new CreateValidator();
+            var validator = new ResourceCreateValidator();
             var validationResult = await validator.ValidateAsync(model);
             if (validationResult.IsValid is false) 
             {
@@ -71,7 +77,7 @@ namespace BusinessLogic.Services
 
         public async Task<Result> UpdateResourceAsync(string userId, int id, ResourceUpdateModel model)
         {
-            var validator = new UpdateValidator();
+            var validator = new ResourceUpdateValidator();
             var validationResult = await validator.ValidateAsync(model);
             if (validationResult.IsValid is false)
             {

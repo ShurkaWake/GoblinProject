@@ -1,18 +1,20 @@
-﻿using BusinessLogic.Abstractions;
-using Microsoft.AspNetCore.Mvc;
-using System.Xml.Linq;
+﻿using AutoFilterer.Attributes;
+using AutoFilterer.Enums;
+using BusinessLogic.Abstractions;
 
 namespace BusinessLogic.Filtering
 {
     public class UserFilter : CustomFilterBase
     {
-        [FromQuery(Name = "id.eq")]
+        [StringFilterOptions(StringFilterOption.Equals)]
         public string Id { get; set; }
 
-        [FromQuery(Name = "email.stw")]
+
+        [StringFilterOptions(StringFilterOption.Contains)]
         public string Email { get; set; }
 
-        [FromQuery(Name = "fullName.stw")]
+
+        [StringFilterOptions(StringFilterOption.Contains)]
         public string FullName { get; set; }
     }
 }

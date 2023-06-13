@@ -1,22 +1,20 @@
-﻿using BusinessLogic.Abstractions;
+﻿using AutoFilterer.Attributes;
+using AutoFilterer.Enums;
+using BusinessLogic.Abstractions;
 using DataAccess.Enums;
-using Microsoft.AspNetCore.Mvc;
-using System.Xml.Linq;
 
 namespace BusinessLogic.Filtering
 {
     public class ResourceFilter : CustomFilterBase
     {
-        [FromQuery(Name = "id.eq")]
         public int Id { get; set; }
 
-        [FromQuery(Name = "name.stw")]
+        [StringFilterOptions(StringFilterOption.Contains)]
         public string Name { get; set; }
 
-        [FromQuery(Name = "description.stw")]
+        [StringFilterOptions(StringFilterOption.Contains)]
         public string Description { get; set; }
 
-        [FromQuery(Name = "status.eq")]
         public ResourceStatus Status { get; set; }
     }
 }

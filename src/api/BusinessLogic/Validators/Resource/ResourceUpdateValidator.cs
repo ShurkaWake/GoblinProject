@@ -4,9 +4,9 @@ using FluentValidation;
 
 namespace BusinessLogic.Validators.Resource
 {
-    public class CreateValidator : AbstractValidator<ResourceCreateModel>
+    public class ResourceUpdateValidator : AbstractValidator<ResourceUpdateModel>
     {
-        public CreateValidator() 
+        public ResourceUpdateValidator() 
         {
             RuleFor(x => x.Name).NotEmpty();
             RuleFor(x => x.Ammortization).SetValidator(new MoneyValidator());

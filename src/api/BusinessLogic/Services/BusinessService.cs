@@ -31,7 +31,7 @@ namespace BusinessLogic.Services
 
         public async Task<Result<BusinessViewModel>> CreateAsync(BusinessCreateModel model)
         {
-            var validator = new CreateValidator();
+            var validator = new BusinessCreateValidator();
             var validationResult = validator.Validate(model);
 
             if (!validationResult.IsValid)
@@ -115,7 +115,7 @@ namespace BusinessLogic.Services
 
         public async Task<Result<BusinessViewModel>> UpdateAsync(string userId, BusinessUpdateModel model)
         {
-            var validator = new UpdateValidator();
+            var validator = new BusinessUpdateValidator();
             var validationResult = validator.Validate(model);
             if (!validationResult.IsValid)
             {

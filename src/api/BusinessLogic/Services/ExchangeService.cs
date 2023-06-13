@@ -1,5 +1,5 @@
 ﻿using BusinessLogic.Abstractions;
-using BusinessLogic.ViewModels;
+using BusinessLogic.ViewModels.ExternalApiResponses;
 using DataAccess.Entities;
 using DataAccess.Enums;
 using FluentResults;
@@ -10,14 +10,6 @@ namespace BusinessLogic.Services
     public class ExchangeService : IExchangeService
     {
         private const string NbuApiUrl = "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json&valcode={0}";
-
-        private static readonly Dictionary<Currency, string> CurrencyName 
-            = new Dictionary<Currency, string>()
-        {
-            { Currency.EUR, "EUR" },
-            { Currency.UAH, "UAH" },
-            { Currency.EUR, "EUR" },
-        };
 
         public async Task<Result<decimal>> ExchangeAsync(MoneyAmount from, Currency to)
         {
@@ -55,10 +47,15 @@ namespace BusinessLogic.Services
 
         private async Task<Result<decimal>> GetRateToUahAsync(Currency currency)
         {
+            if (currency == Currency.UAH)
+            {
+                return 1;
+            }
+
             try
             {
                 var client = new HttpClient();
-                var requestUrl = string.Format(NbuApiUrl, CurrencyName[currency]);
+                var requestUrl = string.Format(NbuApiUrl, currency.ToString());
                 var response = (await client.GetFromJsonAsync<IEnumerable<NbuResponseModel>>(requestUrl))
                     .FirstOrDefault();
 

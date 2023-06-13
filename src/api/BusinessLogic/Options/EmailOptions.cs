@@ -2,7 +2,7 @@
 {
     public class EmailOptions
     {
-        public const string Section = "EmailOptions";
+        public const string Section = "Email";
 
         public string Username { get; set; }
 

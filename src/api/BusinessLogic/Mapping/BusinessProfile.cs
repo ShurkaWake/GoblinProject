@@ -2,6 +2,7 @@
 using BusinessLogic.ViewModels.AppUser;
 using BusinessLogic.ViewModels.Business;
 using BusinessLogic.ViewModels.Resource;
+using BusinessLogic.ViewModels.WorkingShift;
 using DataAccess.Entities;
 
 namespace BusinessLogic.Mapping
@@ -21,6 +22,8 @@ namespace BusinessLogic.Mapping
             CreateMap<Resource, ResourceViewModel>();
             CreateMap<Resource, ResourceCreateModel>();
             CreateMap<Resource, ResourceUpdateModel>();
+
+            CreateMap<WorkingShift, WorkingShiftViewModel>();
         }
     }
 }

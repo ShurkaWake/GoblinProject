@@ -18,6 +18,6 @@ namespace DataAccess.Entities
         /// </summary>
         public MoneyAmount Ammortization { get; set; }
 
-        public ResourceStatus status { get; set; } = ResourceStatus.Free;
+        public ResourceStatus Status { get; set; } = ResourceStatus.Free;
     }
 }

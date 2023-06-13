@@ -3,11 +3,10 @@ using FluentValidation;
 
 namespace BusinessLogic.Validators.AppUser
 {
-    public class CreateValidator : AbstractValidator<UserCreateModel>
+    public class UserUpdateValidator : AbstractValidator<UserUpdateModel>
     {
-        public CreateValidator() 
+        public UserUpdateValidator() 
         {
-            RuleFor(x => x.Email).NotEmpty().EmailAddress();
             RuleFor(x => x.FullName).NotEmpty();
         }
     }

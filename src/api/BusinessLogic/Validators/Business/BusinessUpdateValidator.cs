@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace BusinessLogic.Validators.Business
 {
-    public class UpdateValidator : AbstractValidator<BusinessUpdateModel>
+    public class BusinessUpdateValidator : AbstractValidator<BusinessUpdateModel>
     {
-        public UpdateValidator() 
+        public BusinessUpdateValidator() 
         {
             RuleFor(x => x.Name).NotEmpty().MinimumLength(6);
             RuleFor(x => x.Location).NotEmpty();
