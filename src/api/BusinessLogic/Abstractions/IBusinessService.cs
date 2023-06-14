@@ -8,7 +8,7 @@ namespace BusinessLogic.Abstractions
     {
         public Task<Result<BusinessViewModel>> CreateAsync(BusinessCreateModel model);
 
-        public Task<Result<BusinessViewModel>> UpdateAsync(string userId, BusinessUpdateModel model);
+        public Task<Result<BusinessViewModel>> UpdateAsync(int id, BusinessUpdateModel model);
 
         public Task<Result<int>> DeleteAsync(int id);
 

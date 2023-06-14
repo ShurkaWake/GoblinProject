@@ -15,20 +15,21 @@ namespace BusinessLogic.Mapping
         {
             CreateMap<AppUser, UserAuthModel>();
             CreateMap<AppUser, UserViewModel>();
-            CreateMap<AppUser, UserCreateModel>();
+            CreateMap<UserCreateModel, AppUser>();
 
-            CreateMap<Business, BusinessCreateModel>();
+            CreateMap<BusinessCreateModel, Business>();
             CreateMap<Business, BusinessViewModel>();
             CreateMap<Business, BusinessUpdateModel>();
 
             CreateMap<Resource, ResourceViewModel>();
-            CreateMap<Resource, ResourceCreateModel>();
-            CreateMap<Resource, ResourceUpdateModel>();
+            CreateMap<ResourceCreateModel, Resource>();
+            CreateMap<ResourceUpdateModel, Resource>();
 
             CreateMap<WorkingShift, WorkingShiftViewModel>();
+            CreateMap<WorkingShift, WorkingShiftForIot>();
 
             CreateMap<Scales, ScalesViewModel>();
-            CreateMap<Scales, ScalesCreateModel>();
+            CreateMap<ScalesCreateModel, Scales>();
 
             CreateMap<Measurement, MeasurementViewModel>();
         }

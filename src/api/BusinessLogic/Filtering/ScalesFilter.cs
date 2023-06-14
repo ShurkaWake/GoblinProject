@@ -6,7 +6,8 @@ namespace BusinessLogic.Filtering
 {
     public class ScalesFilter : CustomFilterBase
     {
-        public int Id { get; set; }
+        [OperatorComparison(OperatorType.Equal)]
+        public int? Id { get; set; }
 
         [StringFilterOptions(StringFilterOption.Contains)]
         public string SerialNumber { get; set; }

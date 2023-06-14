@@ -38,8 +38,11 @@ namespace BusinessLogic.Services
             {
                 return Result.Fail(validationResult.Errors.Select(x => x.ErrorMessage));
             }
-
-            var business = _mapper.Map<Business>(model);
+            var business = new Business()
+            {
+                Name = model.Name,
+                Location = model.Location,
+            };
             
             try
             {
@@ -90,7 +93,7 @@ namespace BusinessLogic.Services
             IEnumerable<Business> businesses;
             try
             {
-                businesses = await _repository.GetAllAsync(filter);
+                businesses = (await _repository.GetAllAsync(filter)).ToArray();
             }
             catch (Exception ex)
             {
@@ -113,7 +116,7 @@ namespace BusinessLogic.Services
             return Result.Ok(response);
         }
 
-        public async Task<Result<BusinessViewModel>> UpdateAsync(string userId, BusinessUpdateModel model)
+        public async Task<Result<BusinessViewModel>> UpdateAsync(int id, BusinessUpdateModel model)
         {
             var validator = new BusinessUpdateValidator();
             var validationResult = validator.Validate(model);
@@ -122,9 +125,7 @@ namespace BusinessLogic.Services
                 return Result.Fail(validationResult.Errors.Select(x => x.ErrorMessage));
             }
 
-            var user = await _userRepository.GetUserIncludingJob(userId);
-
-            var business = await _repository.GetAsync(user.Job.Id);
+            var business = await _repository.GetAsync(id);
             if (business is null)
             {
                 return Result.Fail("Business not found");

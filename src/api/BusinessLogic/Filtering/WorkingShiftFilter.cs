@@ -7,15 +7,16 @@ namespace BusinessLogic.Filtering
 {
     public class WorkingShiftFilter : CustomFilterBase
     {
-        public int Id { get; set; }
+        [OperatorComparison(OperatorType.Equal)]
+        public int? Id { get; set; }
 
         [StringFilterOptions(StringFilterOption.Equals)]
         public string ForemanId { get; set; }
 
         [OperatorComparison(OperatorType.GreaterThanOrEqual)]
-        public DateTime Start { get; set; }
+        public DateTime? Start { get; set; }
 
         [OperatorComparison(OperatorType.LessThanOrEqual)]
-        public DateTime End { get; set; }
+        public DateTime? End { get; set; }
     }
 }

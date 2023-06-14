@@ -40,6 +40,8 @@ namespace BusinessLogic.Services
 
         private async Task<Result> SeedAdminAndRoles()
         {
+            var user = _userManager.Users;
+
             var admin = await _userManager.Users
                         .Where(u => u.Email == _settings.AdminEmail)
                         .FirstOrDefaultAsync();
@@ -47,7 +49,8 @@ namespace BusinessLogic.Services
             if (admin is null)
             {
                 var business = new Business {
-                    Name = "Goblin Project"
+                    Name = "Goblin Project",
+                    Location = "Kharkiv"
                 };
 
                 try

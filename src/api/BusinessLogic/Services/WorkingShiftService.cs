@@ -17,6 +17,7 @@ namespace BusinessLogic.Services
     {
         private readonly IBusinessRepository _businessRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IScalesRepository _scalesRepository;
         private readonly UserManager<AppUser> _userManager;
         private readonly IMapper _mapper;
         private readonly IHashService _hashService;
@@ -24,12 +25,14 @@ namespace BusinessLogic.Services
         public WorkingShiftService(
             IBusinessRepository businessRepository, 
             IUserRepository userRepository, 
+            IScalesRepository scalesRepository,
             UserManager<AppUser> userManager, 
             IMapper mapper,
             IHashService hashService)
         {
             _businessRepository = businessRepository;
             _userRepository = userRepository;
+            _scalesRepository = scalesRepository;
             _userManager = userManager;
             _mapper = mapper;
             _hashService = hashService;
@@ -221,6 +224,24 @@ namespace BusinessLogic.Services
             response.Hash = _hashService.Hash(workingShift.Id, 6);
 
             return Result.Ok();
+        }
+
+        public async Task<Result<IEnumerable<WorkingShiftForIot>>> GetWorkingShiftForScalesAsync(string serialNumber)
+        {
+            var scales = await _scalesRepository.GetScalesBySerialNumberIncludingAll(serialNumber);
+            if (scales is null)
+            {
+                return Result.Fail("Scales not found");
+            }
+
+            var business = await _businessRepository.GetBusinessIncludingAll(scales.Id);
+
+            var response = _mapper.Map<
+                IEnumerable<WorkingShift>, 
+                IEnumerable<WorkingShiftForIot>>
+                (business.WorkingShifts);
+
+            return Result.Ok(response);
         }
 
         private async Task<Result> IsForemanAndWorkerOf(string userId, int businessId)

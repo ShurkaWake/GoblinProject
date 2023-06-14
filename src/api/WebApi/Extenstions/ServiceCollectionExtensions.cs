@@ -50,10 +50,32 @@ namespace WebApi.Extenstions
         {
             return services
                 .AddTransient<ISeeder, Seeder>()
-                .AddTransient<IUserRepository, UserRepository>()
-                .AddTransient<ITokenService, TokenService>()
                 .AddTransient<IAuthService, AuthService>()
-                .AddTransient<IBusinessRepository, BusinessRepository>();
+                .AddTransient<IUserRepository, UserRepository>()
+                .AddTransient<IBusinessRepository, BusinessRepository>()
+                .AddTransient<IScalesRepository, ScalesRepository>()
+                .AddTransient<IBusinessService, BusinessService>()
+                .AddTransient<IEmailService, EmailService>()
+                .AddTransient<IExchangeService, ExchangeService>()
+                .AddTransient<IHashService, HashService>()
+                .AddTransient<IMeasurementService, MeasurementService>()
+                .AddTransient<IResourceService, ResourceService>()
+                .AddTransient<IScalesService, ScalesService>()
+                .AddTransient<IUserService, UserService>()
+                .AddTransient<IWorkingShiftService, WorkingShiftService>()
+                .AddTransient<ITokenService, TokenService>()
+                ;
+        }
+
+        public static IServiceCollection AddServicesOptions(this IServiceCollection services, IConfiguration configuration)
+        {
+            return services
+                .Configure<SeederOptions>(
+                    configuration.GetSection(SeederOptions.Section))
+                .Configure<JwtOptions>(
+                    configuration.GetSection(JwtOptions.Section))
+                .Configure<EmailOptions>(
+                    configuration.GetSection(EmailOptions.Section));
         }
 
         public static IServiceCollection AddSwagger(this IServiceCollection services)

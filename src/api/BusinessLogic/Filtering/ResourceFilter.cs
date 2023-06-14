@@ -7,7 +7,8 @@ namespace BusinessLogic.Filtering
 {
     public class ResourceFilter : CustomFilterBase
     {
-        public int Id { get; set; }
+        [OperatorComparison(OperatorType.Equal)]
+        public int? Id { get; set; }
 
         [StringFilterOptions(StringFilterOption.Contains)]
         public string Name { get; set; }
@@ -15,6 +16,7 @@ namespace BusinessLogic.Filtering
         [StringFilterOptions(StringFilterOption.Contains)]
         public string Description { get; set; }
 
-        public ResourceStatus Status { get; set; }
+        [OperatorComparison(OperatorType.Equal)]
+        public ResourceStatus? Status { get; set; }
     }
 }

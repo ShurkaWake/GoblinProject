@@ -28,5 +28,7 @@ namespace BusinessLogic.Abstractions
         public Task<Result> DeleteResourceAsync(string userId, int shiftId, int resourceId);
 
         public Task<Result<int>> DeleteWorkingShiftAsync(string userId, int shiftId);
+
+        public Task<Result<IEnumerable<WorkingShiftForIot>>> GetWorkingShiftForScalesAsync(string serialNumber);
     }
 }

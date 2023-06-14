@@ -15,6 +15,18 @@ namespace BusinessLogic.Services
         private readonly IExchangeService _exchangeService;
         private readonly IMapper _mapper;
 
+        public MeasurementService(
+            IScalesRepository scalesRepository, 
+            IBusinessRepository businessRepository, 
+            IExchangeService exchangeService, 
+            IMapper mapper)
+        {
+            _scalesRepository = scalesRepository;
+            _businessRepository = businessRepository;
+            _exchangeService = exchangeService;
+            _mapper = mapper;
+        }
+
         public async Task<Result<MeasurementViewModel>> AddMeasurementAsync(string scalesSerialNumber, decimal weight, WeightUnits unit)
         {
             var scales = await _scalesRepository.GetScalesBySerialNumberIncludingAll(scalesSerialNumber);

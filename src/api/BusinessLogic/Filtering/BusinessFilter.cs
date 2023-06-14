@@ -6,9 +6,10 @@ namespace BusinessLogic.Filtering
 {
     public class BusinessFilter : CustomFilterBase
     {
-        public int Id { get; set; }
+        [OperatorComparison(OperatorType.Equal)]
+        public int? Id { get; set; }
 
-        [StringFilterOptions(StringFilterOption.Equals)]
+        [StringFilterOptions(StringFilterOption.Contains)]
         public string Name { get; set; }
 
         [StringFilterOptions(StringFilterOption.Contains)]

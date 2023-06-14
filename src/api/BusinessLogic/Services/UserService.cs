@@ -56,7 +56,7 @@ namespace BusinessLogic.Services
             var changePasswordResult = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
             if (changePasswordResult.Succeeded is false)
             {
-                return Result.Fail("Cannot change password");
+                return Result.Fail("Old password is wrong");
             }
 
             await _signInManager.RefreshSignInAsync(user);
@@ -72,7 +72,8 @@ namespace BusinessLogic.Services
                 return Result.Fail(validationResult.Errors.Select(x => x.ErrorMessage));
             }
 
-            var existingUser = await _userRepository.FindAsync(u => u.Email == u.Email);
+            var existingUsers = await _userRepository.FindAsync(u => u.Email == model.Email);
+            var existingUser = existingUsers.FirstOrDefault();
             if (existingUser is not null) 
             {
                 return Result.Fail("User with this Email already exists");
@@ -108,8 +109,8 @@ namespace BusinessLogic.Services
                 user.Email,
                 "Registration on Goblin Project",
                 "You successfully registrated on Goblin Project. Your login credentials:" +
-                $"Email: {user.Email}" +
-                $"Password: {password}");
+                $"\nEmail: {user.Email}" +
+                $"\nPassword: ${password}");
 
             if (emailResult.IsFailed)
             {
