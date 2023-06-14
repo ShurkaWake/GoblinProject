@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BusinessLogic.ViewModels.AppUser;
 using BusinessLogic.ViewModels.Business;
+using BusinessLogic.ViewModels.Measurement;
 using BusinessLogic.ViewModels.Resource;
 using BusinessLogic.ViewModels.Scales;
 using BusinessLogic.ViewModels.WorkingShift;
@@ -28,6 +29,8 @@ namespace BusinessLogic.Mapping
 
             CreateMap<Scales, ScalesViewModel>();
             CreateMap<Scales, ScalesCreateModel>();
+
+            CreateMap<Measurement, MeasurementViewModel>();
         }
     }
 }

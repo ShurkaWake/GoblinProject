@@ -83,5 +83,17 @@ namespace BusinessLogic.Services
                 return Result.Fail("Unable to get exchange rates from bank.gov.ua");
             }
         }
+
+        public Result<decimal> OzToGrams(decimal ozGold)
+        {
+            const decimal k = 31.10348013m;
+            return Result.Ok(k * ozGold);
+        }
+
+        public Result<decimal> GramsToOz(decimal gramsGold)
+        { 
+            const decimal k = 0.032150743126506m;
+            return Result.Ok(k * gramsGold);
+        }
     }
 }
