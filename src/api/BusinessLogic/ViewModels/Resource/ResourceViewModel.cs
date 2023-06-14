@@ -1,4 +1,4 @@
-﻿using DataAccess.Entities;
+﻿using BusinessLogic.ViewModels.MoneyAmount;
 using DataAccess.Enums;
 
 namespace BusinessLogic.ViewModels.Resource
@@ -11,8 +11,8 @@ namespace BusinessLogic.ViewModels.Resource
 
         public string Description { get; set; }
 
-        public MoneyAmount Ammortization { get; set; }
+        public MoneyAmountViewModel Ammortization { get; set; }
 
-        public ResourceStatus Status { get; set; }
+        public string Status { get; set; }
     }
 }

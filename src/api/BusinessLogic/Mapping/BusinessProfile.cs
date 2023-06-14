@@ -2,6 +2,7 @@
 using BusinessLogic.ViewModels.AppUser;
 using BusinessLogic.ViewModels.Business;
 using BusinessLogic.ViewModels.Measurement;
+using BusinessLogic.ViewModels.MoneyAmount;
 using BusinessLogic.ViewModels.Resource;
 using BusinessLogic.ViewModels.Scales;
 using BusinessLogic.ViewModels.WorkingShift;
@@ -24,6 +25,9 @@ namespace BusinessLogic.Mapping
             CreateMap<Resource, ResourceViewModel>();
             CreateMap<ResourceCreateModel, Resource>();
             CreateMap<ResourceUpdateModel, Resource>();
+
+            CreateMap<MoneyAmountCreateModel, MoneyAmount>();
+            CreateMap<MoneyAmount, MoneyAmountViewModel>();
 
             CreateMap<WorkingShift, WorkingShiftViewModel>();
             CreateMap<WorkingShift, WorkingShiftForIot>();

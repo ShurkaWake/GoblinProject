@@ -11,22 +11,26 @@ using WebApi.Requests.Business;
 
 namespace WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/business")]
     [Authorize]
-    public class BusinessController : Controller
+    [ApiController]
+    public class BusinessController : ControllerBase
     {
         private readonly IBusinessService _businessService;
         private readonly IUserService _userService;
+        private readonly IResourceService _resourceService;
         private readonly UserManager<AppUser> _userManager;
 
         public BusinessController(
             IBusinessService businessService, 
             IUserService userService,
-            UserManager<AppUser> userManager)
+            UserManager<AppUser> userManager,
+            IResourceService resourceService)
         {
             _businessService = businessService;
             _userService = userService;
             _userManager = userManager;
+            _resourceService = resourceService;
         }
 
         [HttpPost]
@@ -46,7 +50,7 @@ namespace WebApi.Controllers
                 return BadRequest(userResult.ToErrors());
             }
 
-            return userResult.ToObjectResponse();
+            return CreatedAtAction("CreateBusiness", businessResult.Value);
         }
 
         [HttpGet]
@@ -79,6 +83,14 @@ namespace WebApi.Controllers
         {
             var result = await _businessService.DeleteAsync(id);
             return result.ToObjectResponse();
+        }
+
+        [HttpGet("resources")]
+        public async Task<IActionResult> GetBusinessResourcesAsync([FromQuery] ResourceFilter filter)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var result = await _resourceService.GetAllBusinessResourcesAsync(user.Id, filter);
+            return result.ToObjectResponse(filter);
         }
     }
 }

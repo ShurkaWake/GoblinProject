@@ -6,7 +6,7 @@ namespace DataAccess.Entities
     {
         public int Id { get; set; }
 
-        public AppUser Foreman { get; set; }
+        public AppUser? Foreman { get; set; }
 
         public Business Business { get; set; }
 

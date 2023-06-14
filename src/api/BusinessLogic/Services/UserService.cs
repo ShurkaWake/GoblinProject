@@ -89,8 +89,7 @@ namespace BusinessLogic.Services
             user.UserName = model.Email;
             user.Job = business;
 
-            var password = new Password(20)
-                .IncludeSpecial()
+            var password = new Password(12)
                 .IncludeLowercase()
                 .IncludeUppercase()
                 .IncludeNumeric()
@@ -108,9 +107,9 @@ namespace BusinessLogic.Services
             var emailResult = await _emailService.SendEmailAsync(
                 user.Email,
                 "Registration on Goblin Project",
-                "You successfully registrated on Goblin Project. Your login credentials:" +
-                $"\nEmail: {user.Email}" +
-                $"\nPassword: ${password}");
+                "You successfully registered on Goblin Project. Your login credentials:<br>" +
+                $"Email: {user.Email} <br>" +
+                $"Password: ${password}");
 
             if (emailResult.IsFailed)
             {
@@ -157,6 +156,7 @@ namespace BusinessLogic.Services
             }
 
             var response = _mapper.Map<IEnumerable<AppUser>, IEnumerable<UserViewModel>>(users);
+
             return Result.Ok(response);
         }
 

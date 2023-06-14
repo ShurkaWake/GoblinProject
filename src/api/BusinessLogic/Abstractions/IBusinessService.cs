@@ -1,4 +1,5 @@
 ﻿using BusinessLogic.Filtering;
+using BusinessLogic.ViewModels.AppUser;
 using BusinessLogic.ViewModels.Business;
 using FluentResults;
 

@@ -4,6 +4,7 @@ using BusinessLogic.Core;
 using BusinessLogic.Filtering;
 using BusinessLogic.ViewModels.AppUser;
 using DataAccess.Entities;
+using FluentResults;
 using GenericWebApi.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -12,20 +13,24 @@ using WebApi.Extenstions;
 
 namespace WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/user")]
     [Authorize]
-    public class UserController : Controller
+    [ApiController]
+    public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IBusinessService _businessService;
         private readonly UserManager<AppUser> _userManager;
         private readonly IMapper _mapper;
 
         public UserController(
             IUserService userService, 
+            IBusinessService businessService,
             UserManager<AppUser> userManager,
             IMapper mapper)
         {
             _userService = userService;
+            _businessService = businessService;
             _userManager = userManager;
             _mapper = mapper;
         }
@@ -66,7 +71,33 @@ namespace WebApi.Controllers
         public async Task<IActionResult> GetCurrentUser()
         {
             var user = await _userManager.GetUserAsync(User);
-            return Ok(_mapper.Map<UserViewModel>(user));
+            var response = _mapper.Map<UserViewModel>(user);
+            return Result.Ok(response).ToObjectResponse();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateNewWorkerAsync([FromBody] UserCreateModel model, [FromQuery] string role)
+        {
+            if (role == Roles.Admin || role == Roles.Owner)
+            {
+                return Result.Fail("Unable to create worker of this role").ToNoContent();
+            }
+            if (Roles.AllowedRoles.Contains(role) is false)
+            {
+                return Result.Fail("There is no role with this name").ToNoContent();
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+            var business = await _businessService.GetUserBusinessAsync(user.Id);
+
+            var result = await _userService.CreateAsync(business.Value.Id, role, model);
+
+            if (result.IsFailed)
+            {
+                return result.ToObjectResponse();
+            }
+
+            return CreatedAtAction("CreateNewWorker", result.Value);
         }
     }
 }

@@ -57,7 +57,7 @@ namespace BusinessLogic.Services
                 : Result.Fail("Failed to save");
         }
 
-        public async Task<Result<IEnumerable<ResourceViewModel>>> GetAllBusinessResourcesAsync(string userId, ResourceFilter filter)
+        public async Task<Result<IEnumerable<ResourceViewModel>>> GetAllBusinessResourcesAsync(string userId, ResourceFilter filter = null)
         {
             var business = await _businessRepository.GetUserBusinessIncludingAll(userId);
             IEnumerable<Resource> resources = business.Resources.AsQueryable().ApplyFilter(filter);
@@ -70,7 +70,7 @@ namespace BusinessLogic.Services
             var business = await _businessRepository.GetUserBusinessIncludingAll(userId);
             var resource = business.Resources.Where(x => x.Id == id).FirstOrDefault();
 
-            return resource is null
+            return resource is not null
                 ? Result.Ok(_mapper.Map<ResourceViewModel>(resource))
                 : Result.Fail("Resource not found");
         }
@@ -89,9 +89,11 @@ namespace BusinessLogic.Services
 
             resource.Name = model.Name;
             resource.Description = model.Description;
-            resource.Ammortization = model.Ammortization;
+            resource.Ammortization = _mapper.Map<MoneyAmount>(model.Ammortization);
 
-            return Result.Ok();
+            return (await _businessRepository.ConfirmAsync()) > 0
+                ? Result.Ok()
+                : Result.Fail("Cannot save resource");
         }
     }
 }

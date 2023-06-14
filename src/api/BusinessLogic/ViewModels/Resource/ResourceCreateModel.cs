@@ -1,4 +1,4 @@
-﻿using DataAccess.Entities;
+﻿using BusinessLogic.ViewModels.MoneyAmount;
 
 namespace BusinessLogic.ViewModels.Resource
 {
@@ -8,6 +8,6 @@ namespace BusinessLogic.ViewModels.Resource
 
         public string Description { get; set; }
 
-        public MoneyAmount Ammortization { get; set; }
+        public MoneyAmountCreateModel Ammortization { get; set; }
     }
 }

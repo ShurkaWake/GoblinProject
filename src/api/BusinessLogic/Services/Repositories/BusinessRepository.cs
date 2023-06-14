@@ -24,6 +24,7 @@ namespace BusinessLogic.Services.Repositories
                 .Include(x => x.Users)
                 .Include(x => x.Scales)
                 .Include(x => x.Resources)
+                .ThenInclude(x => x.Ammortization)
                 .Include(x => x.WorkingShifts)
                 .ThenInclude(x => x.UsedResources)
                 .FirstOrDefaultAsync(x => x.Id == id);

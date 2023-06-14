@@ -1,10 +1,11 @@
-﻿using DataAccess.Entities;
+﻿using BusinessLogic.ViewModels.MoneyAmount;
+using DataAccess.Entities;
 using DataAccess.Enums;
 using FluentValidation;
 
 namespace BusinessLogic.Validators.MoneyAmount
 {
-    public class MoneyValidator : AbstractValidator<DataAccess.Entities.MoneyAmount>
+    public class MoneyValidator : AbstractValidator<MoneyAmountCreateModel>
     {
         public MoneyValidator() 
         {

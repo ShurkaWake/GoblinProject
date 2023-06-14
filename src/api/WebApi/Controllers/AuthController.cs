@@ -7,7 +7,8 @@ using WebApi.Requests.Auth;
 
 namespace WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/auth")]
+    [ApiController]
     public sealed class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
@@ -24,7 +25,12 @@ namespace WebApi.Controllers
         {
             var result = await _authService.LoginAsync(_mapper.Map<UserLoginModel>(request));
 
-            return result.ToObjectResponse();
+            if (result.IsFailed)
+            {
+                return result.ToObjectResponse();
+            }
+
+            return CreatedAtAction("Login", result.Value);
         }
     }
 }

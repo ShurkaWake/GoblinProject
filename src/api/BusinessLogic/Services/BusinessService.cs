@@ -4,6 +4,7 @@ using BusinessLogic.Abstractions;
 using BusinessLogic.Core;
 using BusinessLogic.Filtering;
 using BusinessLogic.Validators.Business;
+using BusinessLogic.ViewModels.AppUser;
 using BusinessLogic.ViewModels.Business;
 using DataAccess.Abstractions;
 using DataAccess.Entities;
