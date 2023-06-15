@@ -27,7 +27,7 @@ namespace BusinessLogic.Services
             _mapper = mapper;
         }
 
-        public async Task<Result<MeasurementViewModel>> AddMeasurementAsync(string scalesSerialNumber, decimal weight, WeightUnits unit)
+        public async Task<Result<MeasurementViewModel>> AddMeasurementAsync(string scalesSerialNumber, MeasurementCreateModel model)
         {
             var scales = await _scalesRepository.GetScalesBySerialNumberIncludingAll(scalesSerialNumber);
             if (scales is null)
@@ -35,16 +35,19 @@ namespace BusinessLogic.Services
                 return Result.Fail("Scales not found");
             }
 
+            var business = await _businessRepository.GetBusinessIncludingAll(scales.Business.Id);
+            var workingShift = business.WorkingShifts.FirstOrDefault(x => x.Id == model.ShiftId);
+
             var measurement = new Measurement()
             {
                 Scales = scales,
-                Weight = unit == WeightUnits.Oz
-                    ? weight
-                    : _exchangeService.GramsToOz(weight).Value,
+                Weight = model.Units == WeightUnits.Oz
+                    ? model.Weight
+                    : _exchangeService.GramsToOz(model.Weight).Value,
             };
+            workingShift.Measurement = measurement;
 
-            scales.Measurements.Add(measurement);
-            return (await _scalesRepository.ConfirmAsync()) > 0
+            return (await _businessRepository.ConfirmAsync()) > 0
                 ? Result.Ok(_mapper.Map<MeasurementViewModel>(measurement))
                 : Result.Fail("Unable to add measurement");
         }

@@ -1,5 +1,6 @@
 ﻿using BusinessLogic.Abstractions;
 using BusinessLogic.Enums;
+using BusinessLogic.ViewModels.Measurement;
 using GenericWebApi.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,10 +28,9 @@ namespace WebApi.Controllers
         [HttpPost("{serialNumber}")]
         public async Task<IActionResult> AddMeasurementAsync(
             [FromRoute] string serialNumber, 
-            [FromBody] decimal weight, 
-            [FromQuery] WeightUnits units = WeightUnits.Oz)
+            [FromBody] MeasurementCreateModel model)
         {
-            var result = await _measurementService.AddMeasurementAsync(serialNumber, weight, units);
+            var result = await _measurementService.AddMeasurementAsync(serialNumber, model);
 
             if (result.IsFailed)
             {

@@ -54,8 +54,7 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("all")]
-        [Authorize(Roles = $"{Roles.Manager},{Roles.Owner}")]
-        public async Task<IActionResult> GetAllWorkingShiftsAsync(WorkingShiftFilter filter)
+        public async Task<IActionResult> GetAllWorkingShiftsAsync([FromQuery] WorkingShiftFilter filter)
         {
             var user = await _userManager.GetUserAsync(User);
             var result = await _workingShiftService.GetAllWorkingShiftAsync(user.Id, filter);
@@ -71,7 +70,7 @@ namespace WebApi.Controllers
             return result.ToNoContent();
         }
 
-        [HttpPatch("{shifId:int}/add/{resourseId:int}")]
+        [HttpPatch("{shiftId:int}/add/{resourceId:int}")]
         [Authorize(Roles = $"{Roles.Foreman}")]
         public async Task<IActionResult> AddResourceAsync([FromRoute] int shiftId, [FromRoute] int resourceId)
         {
@@ -80,7 +79,7 @@ namespace WebApi.Controllers
             return result.ToNoContent();
         }
 
-        [HttpPatch("{shifId:int}/delete/{resourseId:int}")]
+        [HttpPatch("{shiftId:int}/delete/{resourceId:int}")]
         [Authorize(Roles = $"{Roles.Foreman}")]
         public async Task<IActionResult> DeleteResourceAsync([FromRoute] int shiftId, [FromRoute] int resourceId)
         {
@@ -95,6 +94,14 @@ namespace WebApi.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             var result = await _workingShiftService.DeleteWorkingShiftAsync(user.Id, id);
+            return result.ToObjectResponse();
+        }
+
+        [HttpGet("{id:int}/resources")]
+        public async Task<IActionResult> GetWorkingShiftResourcesAsync([FromRoute] int id, [FromQuery] ResourceFilter filter)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var result = await _workingShiftService.GetWorkingShiftResources(user.Id, id, filter);
             return result.ToObjectResponse();
         }
 

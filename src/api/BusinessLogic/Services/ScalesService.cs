@@ -2,6 +2,7 @@
 using AutoMapper;
 using BusinessLogic.Abstractions;
 using BusinessLogic.Filtering;
+using BusinessLogic.Validators.Scales;
 using BusinessLogic.ViewModels.Scales;
 using DataAccess.Abstractions;
 using DataAccess.Entities;
@@ -14,19 +15,38 @@ namespace BusinessLogic.Services
         private readonly IBusinessRepository _businessRepository;
         private readonly IMapper _mapper;
 
+        public ScalesService(IBusinessRepository businessRepository, IMapper mapper)
+        {
+            _businessRepository = businessRepository;
+            _mapper = mapper;
+        }
+
         public async Task<Result<ScalesViewModel>> CreateScalesAsync(string userId, ScalesCreateModel model)
         {
+            var validator = new ScalesCreateValidator();
+            var validationResult = validator.Validate(model);
+            if (validationResult.IsValid is false)
+            {
+                return Result.Fail(validationResult.Errors.Select(x => x.ErrorMessage));
+            }
+
             var business = await _businessRepository.GetUserBusinessIncludingAll(userId);
             if (business == null)
             {
                 return Result.Fail("User not found");
             }
+            var duplicate = business.Scales.FirstOrDefault(x => x.SerialNumber == model.SerialNumber);
+            if (duplicate is not null)
+            {
+                return Result.Fail("Scales with this Serial Number already exists");
+            }
+
 
             var scales = _mapper.Map<Scales>(model);
             business.Scales.Add(scales);
 
             return (await _businessRepository.ConfirmAsync()) > 0
-                ? Result.Ok(_mapper.Map<ScalesViewModel>(model))
+                ? Result.Ok(_mapper.Map<ScalesViewModel>(scales))
                 : Result.Fail("Failed to add scales");
         }
 

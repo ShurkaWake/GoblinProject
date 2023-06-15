@@ -6,7 +6,7 @@ namespace BusinessLogic.Abstractions
 {
     public interface IMeasurementService
     {
-        public Task<Result<MeasurementViewModel>> AddMeasurementAsync(string scalesSerialNumber, decimal ozWeight, WeightUnits unit);
+        public Task<Result<MeasurementViewModel>> AddMeasurementAsync(string scalesSerialNumber, MeasurementCreateModel model);
 
         public Task<Result<int>> DeleteMeasurementAsync(string userId, int workingShiftId);
 

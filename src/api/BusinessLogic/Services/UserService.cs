@@ -88,6 +88,7 @@ namespace BusinessLogic.Services
             var user = _mapper.Map<AppUser>(model);
             user.UserName = model.Email;
             user.Job = business;
+            user.Role = role;
 
             var password = new Password(12)
                 .IncludeLowercase()
@@ -143,6 +144,36 @@ namespace BusinessLogic.Services
                 : Result.Fail("Failed to delete User");
         }
 
+        public async Task<Result<string>> FireWorker(string userId, string workerId)
+        {
+            if(userId == workerId)
+            {
+                return Result.Fail("Cannot delete yourself");
+            }
+
+            var business = await _businessRepository.GetUserBusinessIncludingAll(userId);
+            if (business is null)
+            {
+                return Result.Fail("User not found");
+            }
+
+            var worker = business.Users.FirstOrDefault(x => x.Id == workerId);
+            if (worker is null)
+            {
+                return Result.Fail("Worker not found");
+            }
+            if (worker.Role.ToLower() == Roles.Owner.ToLower())
+            {
+                return Result.Fail("Cannot delete owner");
+            }
+
+            business.Users.Remove(worker);
+
+            return (await _businessRepository.ConfirmAsync()) > 0
+                ? Result.Ok(worker.Id)
+                : Result.Fail("Unable to delete worker");
+        }
+
         public async Task<Result<IEnumerable<UserViewModel>>> GetAllUsersAsync(UserFilter filter)
         {
             IEnumerable<AppUser> users;
@@ -157,6 +188,18 @@ namespace BusinessLogic.Services
 
             var response = _mapper.Map<IEnumerable<AppUser>, IEnumerable<UserViewModel>>(users);
 
+            return Result.Ok(response);
+        }
+
+        public async Task<Result<IEnumerable<UserViewModel>>> GetAllWorkersAsync(string userId, UserFilter filter)
+        {
+            var business = await _businessRepository.GetUserBusinessIncludingAll(userId);
+            if (business is null)
+            {
+                return Result.Fail("User not found");
+            }
+
+            var response = _mapper.Map<IEnumerable<AppUser>, IEnumerable<UserViewModel>>(business.Users);
             return Result.Ok(response);
         }
 

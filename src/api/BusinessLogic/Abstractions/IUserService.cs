@@ -16,5 +16,9 @@ namespace BusinessLogic.Abstractions
         public Task<Result<IEnumerable<UserViewModel>>> GetAllUsersAsync(UserFilter filter);
 
         public Task<Result> ChangePasswordAsync(string userId, UserChangePasswordModel model);
+
+        public Task<Result<IEnumerable<UserViewModel>>> GetAllWorkersAsync(string userId, UserFilter filter);
+
+        public Task<Result<string>> FireWorker(string userId, string workerId);
     }
 }

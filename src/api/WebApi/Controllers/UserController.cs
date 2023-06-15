@@ -24,7 +24,7 @@ namespace WebApi.Controllers
         private readonly IMapper _mapper;
 
         public UserController(
-            IUserService userService, 
+            IUserService userService,
             IBusinessService businessService,
             UserManager<AppUser> userManager,
             IMapper mapper)
@@ -76,6 +76,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = $"{Roles.Owner}")]
         public async Task<IActionResult> CreateNewWorkerAsync([FromBody] UserCreateModel model, [FromQuery] string role)
         {
             if (role == Roles.Admin || role == Roles.Owner)
@@ -98,6 +99,24 @@ namespace WebApi.Controllers
             }
 
             return CreatedAtAction("CreateNewWorker", result.Value);
+        }
+
+        [HttpGet("workers")]
+        [Authorize(Roles = $"{Roles.Owner},{Roles.Manager}")]
+        public async Task<IActionResult> GetWorkersAsync([FromQuery] UserFilter filter)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var result = await _userService.GetAllWorkersAsync(user.Id, filter);
+            return result.ToObjectResponse();
+        }
+
+        [HttpDelete("workers/{workerId}")]
+        [Authorize(Roles = $"{Roles.Owner}")]
+        public async Task<IActionResult> FireWorkerAsync([FromRoute] string workerId)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var result = await _userService.FireWorker(user.Id, workerId);
+            return result.ToObjectResponse();
         }
     }
 }

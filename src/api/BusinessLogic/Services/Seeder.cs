@@ -68,6 +68,7 @@ namespace BusinessLogic.Services
                     UserName = _settings.AdminLogin,
                     Email = _settings.AdminEmail,
                     EmailConfirmed = true,
+                    Role = Roles.Admin,
                     FullName = "Goblin Admin",
                     Job = business,
                 };

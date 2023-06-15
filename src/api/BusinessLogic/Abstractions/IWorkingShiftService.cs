@@ -1,4 +1,5 @@
 ﻿using BusinessLogic.Filtering;
+using BusinessLogic.ViewModels.Resource;
 using BusinessLogic.ViewModels.WorkingShift;
 using FluentResults;
 
@@ -30,5 +31,7 @@ namespace BusinessLogic.Abstractions
         public Task<Result<int>> DeleteWorkingShiftAsync(string userId, int shiftId);
 
         public Task<Result<IEnumerable<WorkingShiftForIot>>> GetWorkingShiftForScalesAsync(string serialNumber);
+
+        public Task<Result<IEnumerable<ResourceViewModel>>> GetWorkingShiftResources(string userId, int shiftId, ResourceFilter filter);
     }
 }

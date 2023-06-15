@@ -32,6 +32,7 @@ services.AddDbContext<ApplicationContext>(options =>
         options.MigrationsAssembly(typeof(ApplicationContext).Assembly.FullName);
     }); 
 });
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 services
     .AddIdentity<AppUser, AppRole>()

@@ -4,6 +4,7 @@ using BusinessLogic.Abstractions;
 using BusinessLogic.Core;
 using BusinessLogic.Filtering;
 using BusinessLogic.Validators.WorkingShift;
+using BusinessLogic.ViewModels.Resource;
 using BusinessLogic.ViewModels.WorkingShift;
 using DataAccess.Abstractions;
 using DataAccess.Entities;
@@ -181,6 +182,11 @@ namespace BusinessLogic.Services
             }
 
             workingShift.End = DateTime.Now;
+            foreach (var resource in workingShift.UsedResources)
+            {
+                resource.Status = ResourceStatus.Free;
+            }
+
             return (await _businessRepository.ConfirmAsync()) > 0
                 ? Result.Ok()
                 : Result.Fail("Failed to end working shift");
@@ -223,7 +229,7 @@ namespace BusinessLogic.Services
             var response = _mapper.Map<WorkingShiftViewModel>(workingShift);
             response.Hash = _hashService.Hash(workingShift.Id, 6);
 
-            return Result.Ok();
+            return Result.Ok(response);
         }
 
         public async Task<Result<IEnumerable<WorkingShiftForIot>>> GetWorkingShiftForScalesAsync(string serialNumber)
@@ -234,13 +240,38 @@ namespace BusinessLogic.Services
                 return Result.Fail("Scales not found");
             }
 
-            var business = await _businessRepository.GetBusinessIncludingAll(scales.Id);
+            var business = await _businessRepository.GetBusinessIncludingAll(scales.Business.Id);
+            var workingShifts = business.WorkingShifts;
 
             var response = _mapper.Map<
                 IEnumerable<WorkingShift>, 
                 IEnumerable<WorkingShiftForIot>>
-                (business.WorkingShifts);
+                (workingShifts);
 
+            foreach (var workingShift in response) 
+            {
+                workingShift.Hash = _hashService.Hash(workingShift.Id, 6);
+            }
+
+            return Result.Ok(response);
+        }
+
+        public async Task<Result<IEnumerable<ResourceViewModel>>> GetWorkingShiftResources(string userId, int shiftId, ResourceFilter filter)
+        {
+            var business = await _businessRepository.GetUserBusinessIncludingAll(userId);
+            if (business is null)
+            {
+                return Result.Fail("User not found");
+            }
+
+            var workingShift = business.WorkingShifts.FirstOrDefault(x => x.Id == shiftId);
+            if (workingShift is null)
+            {
+                return Result.Fail("Working shift not found");
+            }
+            var resources = workingShift.UsedResources.AsQueryable().ApplyFilter(filter);
+
+            var response = _mapper.Map<IEnumerable<Resource>, IEnumerable<ResourceViewModel>>(resources);
             return Result.Ok(response);
         }
 
