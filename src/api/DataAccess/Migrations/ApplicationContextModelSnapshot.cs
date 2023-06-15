@@ -97,6 +97,10 @@ namespace DataAccess.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");
 
@@ -129,6 +133,10 @@ namespace DataAccess.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -146,9 +154,6 @@ namespace DataAccess.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AmmortizationId")
-                        .HasColumnType("integer");
-
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("timestamp with time zone");
 
@@ -159,8 +164,6 @@ namespace DataAccess.Migrations
                         .HasColumnType("numeric");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AmmortizationId");
 
                     b.HasIndex("ScalesId");
 
@@ -194,6 +197,9 @@ namespace DataAccess.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("AmmortizationId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("BusinessId")
                         .HasColumnType("integer");
 
@@ -205,13 +211,15 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
                     b.Property<int?>("WorkingShiftId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("status")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("AmmortizationId");
 
                     b.HasIndex("BusinessId");
 
@@ -235,17 +243,12 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("WlanName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("WlanPassword")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.HasKey("Id");
 
                     b.HasIndex("BusinessId");
+
+                    b.HasIndex("SerialNumber")
+                        .IsUnique();
 
                     b.ToTable("Scales");
                 });
@@ -403,25 +406,23 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.Entities.Measurement", b =>
                 {
-                    b.HasOne("DataAccess.Entities.MoneyAmount", "Ammortization")
-                        .WithMany()
-                        .HasForeignKey("AmmortizationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("DataAccess.Entities.Scales", "Scales")
                         .WithMany("Measurements")
                         .HasForeignKey("ScalesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Ammortization");
-
                     b.Navigation("Scales");
                 });
 
             modelBuilder.Entity("DataAccess.Entities.Resource", b =>
                 {
+                    b.HasOne("DataAccess.Entities.MoneyAmount", "Ammortization")
+                        .WithMany()
+                        .HasForeignKey("AmmortizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("DataAccess.Entities.Business", "Business")
                         .WithMany("Resources")
                         .HasForeignKey("BusinessId")
@@ -431,6 +432,8 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.Entities.WorkingShift", null)
                         .WithMany("UsedResources")
                         .HasForeignKey("WorkingShiftId");
+
+                    b.Navigation("Ammortization");
 
                     b.Navigation("Business");
                 });

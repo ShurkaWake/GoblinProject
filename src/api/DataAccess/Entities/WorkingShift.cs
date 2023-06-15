@@ -6,7 +6,7 @@ namespace DataAccess.Entities
     {
         public int Id { get; set; }
 
-        public AppUser Foreman { get; set; }
+        public AppUser? Foreman { get; set; }
 
         public Business Business { get; set; }
 
@@ -14,7 +14,7 @@ namespace DataAccess.Entities
 
         public DateTime? End { get; set; }
 
-        public IEnumerable<Resource>? UsedResources { get; set; }
+        public ICollection<Resource>? UsedResources { get; set; }
 
         public Measurement? Measurement { get; set; }
     }

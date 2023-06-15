@@ -7,7 +7,7 @@ namespace DataAccess.Abstractions
         where TEntity : IEntity<TKey> 
         where TKey : IComparable<TKey>
     {
-        Task<TEntity> GetAsync(string id);
+        Task<TEntity> GetAsync(TKey id);
 
         Task<IQueryable<TEntity>> GetAllAsync(PaginationFilterBase filter);
 

@@ -14,13 +14,13 @@ public static class ResultExtensions
         @this.Errors.Select(e => e.Message);
 
     public static ResponseModel<T> ToResponse<T>(this Result<T> @this) =>
-        new ResponseModel<T>(@this.ValueOrDefault, @this.ToErrors().ToArray());
+        new(@this.ValueOrDefault, @this.ToErrors().ToArray());
 
     public static ResponseModel ToResponse(this Result @this) =>
-        new ResponseModel(@this.ToErrors().ToArray());
+        new(@this.ToErrors().ToArray());
 
     public static PagingResponseModel<T> ToResponse<T>(this Result<T> @this, PaginationFilterBase filter) =>
-        new PagingResponseModel<T>(@this.ValueOrDefault, @this.ToErrors().ToArray(), filter.Page, filter.PerPage);
+        new(@this.ValueOrDefault, @this.ToErrors().ToArray(), filter.Page, filter.PerPage);
 
     public static IActionResult ToNoContent(this Result @this) =>
         @this.IsSuccess

@@ -7,8 +7,9 @@ using DataAccess;
 using DataAccess.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using WebApi.Extenstions;
-using WebApi.Mapping;
+using WebApi.Mapping;   
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -29,17 +30,16 @@ services.AddDbContext<ApplicationContext>(options =>
     options.UseNpgsql(connectionString, options =>
     {
         options.MigrationsAssembly(typeof(ApplicationContext).Assembly.FullName);
-    });
+    }); 
 });
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
 services
     .AddIdentity<AppUser, AppRole>()
     .AddEntityFrameworkStores<ApplicationContext>()
     .AddDefaultTokenProviders();
 
-services.Configure<SeederOptions>(
-    configuration.GetSection(SeederOptions.Section));
-services.Configure<JwtOptions>(
-    configuration.GetSection(JwtOptions.Section));
+services.AddServicesOptions(configuration);
 
 services.AddBusinessLogicServices();
 services.AddBearerAuthentication();
@@ -80,6 +80,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

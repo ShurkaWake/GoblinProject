@@ -2,7 +2,7 @@
 {
     public class SeederOptions
     {
-        public const string Section = "SeederOptions";
+        public const string Section = "Seeder";
 
         public string AdminLogin { get; set; }
 

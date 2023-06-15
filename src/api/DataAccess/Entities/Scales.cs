@@ -1,7 +1,9 @@
 ﻿using DataAccess.Abstractions;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Entities
 {
+    [Index(nameof(SerialNumber), IsUnique = true)]
     public class Scales : IEntity<int>
     {
         public int Id { get; set; }
@@ -10,10 +12,6 @@ namespace DataAccess.Entities
 
         public Business Business { get; set; }
 
-        public IEnumerable<Measurement> Measurements { get; set; }
-
-        public string WlanName { get; set; }
-
-        public string WlanPassword { get; set; }
+        public ICollection<Measurement> Measurements { get; set; }
     }
 }

@@ -40,6 +40,8 @@ namespace BusinessLogic.Services
 
         private async Task<Result> SeedAdminAndRoles()
         {
+            var user = _userManager.Users;
+
             var admin = await _userManager.Users
                         .Where(u => u.Email == _settings.AdminEmail)
                         .FirstOrDefaultAsync();
@@ -47,12 +49,14 @@ namespace BusinessLogic.Services
             if (admin is null)
             {
                 var business = new Business {
-                    Name = "Goblin Project"
+                    Name = "Goblin Project",
+                    Location = "Kharkiv"
                 };
 
                 try
                 {
                     await _repository.AddAsync(business);
+                    await _repository.ConfirmAsync();
                 }
                 catch (Exception ex)
                 {
@@ -64,6 +68,7 @@ namespace BusinessLogic.Services
                     UserName = _settings.AdminLogin,
                     Email = _settings.AdminEmail,
                     EmailConfirmed = true,
+                    Role = Roles.Admin,
                     FullName = "Goblin Admin",
                     Job = business,
                 };

@@ -9,15 +9,10 @@ namespace DataAccess.Entities
         public Scales Scales { get; set; }
 
         /// <summary>
-        /// Weight of gold in kilos
+        /// Weight of gold in oz
         /// </summary>
         public decimal Weight { get; set; }
 
         public DateTime DateTime { get; set; }
-
-        /// <summary>
-        /// Ammortization per hour of work
-        /// </summary>
-        public MoneyAmount Ammortization { get; set; }
     }
 }
