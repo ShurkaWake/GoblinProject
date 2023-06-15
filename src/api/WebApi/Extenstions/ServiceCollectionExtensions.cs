@@ -64,6 +64,7 @@ namespace WebApi.Extenstions
                 .AddTransient<IUserService, UserService>()
                 .AddTransient<IWorkingShiftService, WorkingShiftService>()
                 .AddTransient<ITokenService, TokenService>()
+                .AddTransient<IStatisticService, StatisticService>()
                 ;
         }
 
