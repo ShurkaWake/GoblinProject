@@ -1,0 +1,97 @@
+{
+  "version": 1,
+  "author": "Олександр Правосуд",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "wokwi-esp32-devkit-v1",
+      "id": "esp",
+      "top": 69.98,
+      "left": 105.4,
+      "attrs": { "env": "micropython-20230426-v1.20.0" }
+    },
+    {
+      "type": "wokwi-lcd1602",
+      "id": "lcd1",
+      "top": 8.61,
+      "left": 272.56,
+      "attrs": { "pins": "i2c" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r1",
+      "top": 14.45,
+      "left": 208.75,
+      "rotate": 90,
+      "attrs": { "value": "1000" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn1",
+      "top": 192.19,
+      "left": 17.34,
+      "attrs": { "color": "grey", "bounce": "1" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn2",
+      "top": 150.08,
+      "left": 17.43,
+      "attrs": { "color": "yellow" }
+    },
+    {
+      "type": "wokwi-hx711",
+      "id": "cell1",
+      "top": 154.48,
+      "left": 297.11,
+      "attrs": { "type": "5kg" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn3",
+      "top": 108.58,
+      "left": 17.33,
+      "attrs": { "color": "green" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r2",
+      "top": 15.82,
+      "left": 190.94,
+      "rotate": 90,
+      "attrs": { "value": "1000" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn4",
+      "top": 65.83,
+      "left": 17.84,
+      "attrs": { "color": "blue" }
+    }
+  ],
+  "connections": [
+    [ "esp:TX0", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX0", "$serialMonitor:TX", "", [] ],
+    [ "lcd1:VCC", "esp:3V3", "red", [ "h-16.08", "v-114.76" ] ],
+    [ "lcd1:GND", "esp:GND.1", "black", [ "h-28.82", "v-114.76" ] ],
+    [ "lcd1:SDA", "esp:D21", "cyan", [ "h-43.98", "v-219.86" ] ],
+    [ "lcd1:SCL", "esp:D22", "cyan", [ "h-35.07", "v34.87" ] ],
+    [ "btn1:1.r", "esp:D13", "gray", [ "v0" ] ],
+    [ "btn2:2.r", "esp:GND.2", "black", [ "h5.56", "v36.64", "h16.46", "v0.26" ] ],
+    [ "btn2:1.r", "esp:D12", "yellow", [ "h8.97", "v37.3" ] ],
+    [ "btn1:2.r", "esp:GND.2", "black", [ "h14.54", "v-5.83", "h11.52" ] ],
+    [ "cell1:GND", "esp:GND.1", "black", [ "h-56.94", "v38" ] ],
+    [ "cell1:VCC", "esp:3V3", "red", [ "h-43.1", "v19.55", "h-54.31" ] ],
+    [ "btn3:1.r", "esp:D14", "green", [ "h12.98", "v68.4" ] ],
+    [ "btn3:2.r", "esp:GND.2", "black", [ "h5.69", "v105.59" ] ],
+    [ "lcd1:VCC", "r1:1", "purple", [ "h-15.46", "v-93.81" ] ],
+    [ "r1:1", "r2:1", "white", [ "h0" ] ],
+    [ "r1:2", "esp:D21", "purple", [ "h0.19", "v117.22" ] ],
+    [ "r2:2", "esp:D22", "purple", [ "h0.17", "v88.7" ] ],
+    [ "esp:D27", "btn4:1.r", "blue", [ "h-7.71", "v-101.95" ] ],
+    [ "btn4:2.r", "esp:GND.2", "black", [ "h5.62", "v121.15" ] ],
+    [ "cell1:DT", "esp:D4", "blue", [ "h0" ] ],
+    [ "cell1:SCK", "esp:D2", "gold", [ "h0" ] ]
+  ],
+  "dependencies": {}
+}
