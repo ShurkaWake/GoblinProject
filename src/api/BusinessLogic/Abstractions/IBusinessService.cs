@@ -1,6 +1,7 @@
 ﻿using BusinessLogic.Filtering;
 using BusinessLogic.ViewModels.AppUser;
 using BusinessLogic.ViewModels.Business;
+using BusinessLogic.ViewModels.General;
 using FluentResults;
 
 namespace BusinessLogic.Abstractions
@@ -13,7 +14,7 @@ namespace BusinessLogic.Abstractions
 
         public Task<Result<int>> DeleteAsync(int id);
 
-        public Task<Result<IEnumerable<BusinessViewModel>>> GetAllBusinessesAsync(BusinessFilter filter);
+        public Task<PaginationViewModel<BusinessViewModel>> GetAllBusinessesAsync(BusinessFilter filter);
 
         public Task<Result<BusinessViewModel>> GetUserBusinessAsync(string userId);
     }

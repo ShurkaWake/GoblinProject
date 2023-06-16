@@ -1,4 +1,5 @@
 ﻿using BusinessLogic.Filtering;
+using BusinessLogic.ViewModels.General;
 using BusinessLogic.ViewModels.Resource;
 using FluentResults;
 
@@ -10,7 +11,7 @@ namespace BusinessLogic.Abstractions
 
         public Task<Result<ResourceViewModel>> GetResourceAsync(string userId, int id);
 
-        public Task<Result<IEnumerable<ResourceViewModel>>> GetAllBusinessResourcesAsync(string userId, ResourceFilter filter);
+        public Task<PaginationViewModel<ResourceViewModel>> GetAllBusinessResourcesAsync(string userId, ResourceFilter filter);
 
         public Task<Result> UpdateResourceAsync(string userId, int id, ResourceUpdateModel model);
 

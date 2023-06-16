@@ -3,6 +3,7 @@ using AutoMapper;
 using BusinessLogic.Abstractions;
 using BusinessLogic.Filtering;
 using BusinessLogic.Validators.Resource;
+using BusinessLogic.ViewModels.General;
 using BusinessLogic.ViewModels.Resource;
 using DataAccess.Abstractions;
 using DataAccess.Entities;
@@ -57,12 +58,27 @@ namespace BusinessLogic.Services
                 : Result.Fail("Failed to save");
         }
 
-        public async Task<Result<IEnumerable<ResourceViewModel>>> GetAllBusinessResourcesAsync(string userId, ResourceFilter filter = null)
+        public async Task<PaginationViewModel<ResourceViewModel>> GetAllBusinessResourcesAsync(string userId, ResourceFilter filter = null)
         {
             var business = await _businessRepository.GetUserBusinessIncludingAll(userId);
+            int perPage = filter.PerPage;
             IEnumerable<Resource> resources = business.Resources.AsQueryable().ApplyFilter(filter);
-            var response = _mapper.Map<IEnumerable<Resource>, IEnumerable<ResourceViewModel>>(resources);
-            return Result.Ok(response);
+            filter.Page = 1;
+            filter.PerPage = int.MaxValue;
+            int count = business.Resources.AsQueryable().ApplyFilter(filter).Count();
+            int pages = (count / perPage)
+                + (count % perPage == 0
+                    ? 0
+                    : 1);
+
+            var resourceViewModels = _mapper.Map<IEnumerable<Resource>, IEnumerable<ResourceViewModel>>(resources);
+            var response = new PaginationViewModel<ResourceViewModel>()
+            {
+                Data = Result.Ok(resourceViewModels),
+                PageCount = pages
+            };
+
+            return response;
         }
 
         public async Task<Result<ResourceViewModel>> GetResourceAsync(string userId, int id)

@@ -52,7 +52,7 @@ namespace WebApi.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             var result = await _resourceService.GetAllBusinessResourcesAsync(user.Id, filter);
-            return result.ToObjectResponse(filter);
+            return result.ToObjectResponse();
         }
 
         [HttpPut("{id:int}")]

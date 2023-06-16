@@ -1,6 +1,7 @@
 ﻿using BusinessLogic.Filtering;
 using BusinessLogic.ViewModels.AppUser;
 using BusinessLogic.ViewModels.Business;
+using BusinessLogic.ViewModels.General;
 using FluentResults;
 
 namespace BusinessLogic.Abstractions
@@ -13,11 +14,11 @@ namespace BusinessLogic.Abstractions
 
         public Task<Result<string>> DeleteAsync(string userId);
 
-        public Task<Result<IEnumerable<UserViewModel>>> GetAllUsersAsync(UserFilter filter);
+        public Task<PaginationViewModel<UserViewModel>> GetAllUsersAsync(UserFilter filter);
 
         public Task<Result> ChangePasswordAsync(string userId, UserChangePasswordModel model);
 
-        public Task<Result<IEnumerable<UserViewModel>>> GetAllWorkersAsync(string userId, UserFilter filter);
+        public Task<PaginationViewModel<UserViewModel>> GetAllWorkersAsync(string userId, UserFilter filter);
 
         public Task<Result<string>> FireWorker(string userId, string workerId);
     }

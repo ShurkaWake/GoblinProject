@@ -58,7 +58,7 @@ namespace WebApi.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             var result = await _workingShiftService.GetAllWorkingShiftAsync(user.Id, filter);
-            return result.ToObjectResponse(filter);
+            return result.ToObjectResponse();
         }
 
         [HttpPatch("{id:int}/end")]

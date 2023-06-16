@@ -1,4 +1,5 @@
 ﻿using BusinessLogic.Filtering;
+using BusinessLogic.ViewModels.General;
 using BusinessLogic.ViewModels.Resource;
 using BusinessLogic.ViewModels.WorkingShift;
 using FluentResults;
@@ -17,7 +18,7 @@ namespace BusinessLogic.Abstractions
             int id
             );
 
-        public Task<Result<IEnumerable<WorkingShiftViewModel>>> GetAllWorkingShiftAsync(
+        public Task<PaginationViewModel<WorkingShiftViewModel>> GetAllWorkingShiftAsync(
             string userId,
             WorkingShiftFilter filter
             );
