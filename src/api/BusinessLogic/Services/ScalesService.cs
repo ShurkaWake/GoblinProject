@@ -3,6 +3,7 @@ using AutoMapper;
 using BusinessLogic.Abstractions;
 using BusinessLogic.Filtering;
 using BusinessLogic.Validators.Scales;
+using BusinessLogic.ViewModels.General;
 using BusinessLogic.ViewModels.Scales;
 using DataAccess.Abstractions;
 using DataAccess.Entities;
@@ -70,16 +71,36 @@ namespace BusinessLogic.Services
                 : Result.Fail("Failed to delete scales");
         }
 
-        public async Task<Result<IEnumerable<ScalesViewModel>>> GetAllScalesAsync(string userId, ScalesFilter filter)
+        public async Task<PaginationViewModel<ScalesViewModel>> GetAllScalesAsync(string userId, ScalesFilter filter)
         {
             var business = await _businessRepository.GetUserBusinessIncludingAll(userId);
+            int perPage = filter.PerPage;
+            int pages = 1;
             if (business == null)
             {
-                return Result.Fail("User not found");
+                return new PaginationViewModel<ScalesViewModel>()
+                {
+                    Data = Result.Fail("User not found"),
+                    PageCount = 1,
+                };
             }
 
             var scales = business.Scales.AsQueryable().ApplyFilter(filter);
-            return Result.Ok(_mapper.Map<IEnumerable<Scales>, IEnumerable<ScalesViewModel>>(scales));
+            filter.Page = 1;
+            filter.PerPage = int.MaxValue;
+            var allCount = business.Scales.AsQueryable().ApplyFilter(filter).Count();
+            pages = (allCount / perPage) 
+                + (allCount % perPage == 0
+                    ? 0
+                    : 1);
+
+            var response = new PaginationViewModel<ScalesViewModel>()
+            {
+                Data = Result.Ok(_mapper.Map<IEnumerable<Scales>, IEnumerable<ScalesViewModel>>(scales)),
+                PageCount = pages,
+            };
+
+            return response; 
         }
 
         public async Task<Result<ScalesViewModel>> GetScalesAsync(string userId, int scalesId)

@@ -6,6 +6,7 @@ using BusinessLogic.Filtering;
 using BusinessLogic.Validators.Business;
 using BusinessLogic.ViewModels.AppUser;
 using BusinessLogic.ViewModels.Business;
+using BusinessLogic.ViewModels.General;
 using DataAccess.Abstractions;
 using DataAccess.Entities;
 using FluentResults;
@@ -89,20 +90,38 @@ namespace BusinessLogic.Services
             return Result.Ok(business.Id);
         }
 
-        public async Task<Result<IEnumerable<BusinessViewModel>>> GetAllBusinessesAsync(BusinessFilter filter = null)
+        public async Task<PaginationViewModel<BusinessViewModel>> GetAllBusinessesAsync(BusinessFilter filter = null)
         {
             IEnumerable<Business> businesses;
+            int perPage = filter.PerPage;
+            int pages;
             try
             {
                 businesses = (await _repository.GetAllAsync(filter)).ToArray();
+                filter.Page = 1;
+                filter.PerPage = int.MaxValue;
+                pages = (await _repository.GetAllAsync(filter)).Count();
+                var responseCount = businesses.Count();
+                pages = (pages / perPage)
+                    + (pages % perPage == 0
+                        ? 0
+                        : 1);
             }
             catch (Exception ex)
             {
-                return Result.Fail(ex.Message);
+                return new PaginationViewModel<BusinessViewModel>()
+                {
+                    Data = Result.Fail(ex.Message),
+                    PageCount = 1,
+                };
             }
 
             var response = _mapper.Map<IEnumerable<Business>, IEnumerable<BusinessViewModel>>(businesses);
-            return Result.Ok(response);
+            return new PaginationViewModel<BusinessViewModel>()
+            {
+                Data = Result.Ok(response),
+                PageCount = pages,
+            };
         }
 
         public async Task<Result<BusinessViewModel>> GetUserBusinessAsync(string userId)

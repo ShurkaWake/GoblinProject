@@ -40,7 +40,7 @@ namespace WebApi.Controllers
         public async Task<IActionResult> GetAllUsersAsync([FromQuery] UserFilter filter)
         {
             var result = await _userService.GetAllUsersAsync(filter);
-            return result.ToObjectResponse(filter);
+            return result.ToObjectResponse();
         }
 
         [HttpDelete("{id}")]

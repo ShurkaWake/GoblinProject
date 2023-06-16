@@ -51,7 +51,7 @@ namespace WebApi.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             var result = await _scalesService.GetAllScalesAsync(user.Id, filter);
-            return result.ToObjectResponse(filter);
+            return result.ToObjectResponse();
         }
 
         [HttpDelete("{id:int}")]

@@ -1,4 +1,6 @@
-﻿namespace WebApi.Responses;
+﻿using BusinessLogic.ViewModels.General;
+
+namespace WebApi.Responses;
 
 public record ResponseModel<T>
     (T Data,
@@ -8,7 +10,6 @@ public record ResponseModel
     (string[] Errors);
 
 public record PagingResponseModel<T>
-    (T Data,
+    (IEnumerable<T> Data,
     string[] Errors,
-    int PageNumber,
-    int PageSize);
+    int PageCount);

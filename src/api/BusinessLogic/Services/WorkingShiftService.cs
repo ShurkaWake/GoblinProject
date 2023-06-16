@@ -4,6 +4,7 @@ using BusinessLogic.Abstractions;
 using BusinessLogic.Core;
 using BusinessLogic.Filtering;
 using BusinessLogic.Validators.WorkingShift;
+using BusinessLogic.ViewModels.General;
 using BusinessLogic.ViewModels.Resource;
 using BusinessLogic.ViewModels.WorkingShift;
 using DataAccess.Abstractions;
@@ -192,7 +193,7 @@ namespace BusinessLogic.Services
                 : Result.Fail("Failed to end working shift");
         }
 
-        public async Task<Result<IEnumerable<WorkingShiftViewModel>>> GetAllWorkingShiftAsync(
+        public async Task<PaginationViewModel<WorkingShiftViewModel>> GetAllWorkingShiftAsync(
             string userId, 
             WorkingShiftFilter filter
             )
@@ -200,9 +201,14 @@ namespace BusinessLogic.Services
             var job = await _businessRepository.GetUserBusinessIncludingAll(userId);
             if (job is null)
             {
-                return Result.Fail("User not found");
+                return new PaginationViewModel<WorkingShiftViewModel>()
+                {
+                    Data = Result.Fail("User not found"),
+                    PageCount = 1
+                };
             }
 
+            var perPage = filter.PerPage;
             var workingShift = job.WorkingShifts.AsQueryable().ApplyFilter(filter);
             var response = _mapper.Map<IEnumerable<WorkingShift>, IEnumerable<WorkingShiftViewModel>>(workingShift);
             foreach (var item in response)
@@ -210,7 +216,19 @@ namespace BusinessLogic.Services
                 item.Hash = _hashService.Hash(item.Id, 6);
             }
 
-            return Result.Ok(response);
+            filter.Page = 1;
+            filter.PerPage = int.MaxValue;
+            var allCount = job.WorkingShifts.AsQueryable().ApplyFilter(filter).Count();
+            var pages = (allCount / perPage)
+                + (allCount % perPage == 0
+                    ? 0
+                    : 1);
+
+            return new PaginationViewModel<WorkingShiftViewModel>
+            {
+                Data = Result.Ok(response),
+                PageCount = pages
+            };
         }
 
         public async Task<Result<WorkingShiftViewModel>> GetWorkingShiftAsync(string userId, int shiftId)

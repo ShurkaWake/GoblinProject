@@ -74,7 +74,7 @@ namespace WebApi.Controllers
         public async Task<IActionResult> GetAllBusinessAsync([FromQuery] BusinessFilter filter)
         {
             var result = await _businessService.GetAllBusinessesAsync(filter);
-            return result.ToObjectResponse(filter);
+            return result.ToObjectResponse();
         }
 
         [HttpDelete("{id:int}")]
@@ -90,7 +90,7 @@ namespace WebApi.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             var result = await _resourceService.GetAllBusinessResourcesAsync(user.Id, filter);
-            return result.ToObjectResponse(filter);
+            return result.ToObjectResponse();
         }
     }
 }

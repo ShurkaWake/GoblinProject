@@ -1,4 +1,5 @@
 ﻿using BusinessLogic.Filtering;
+using BusinessLogic.ViewModels.General;
 using BusinessLogic.ViewModels.Scales;
 using FluentResults;
 
@@ -10,7 +11,7 @@ namespace BusinessLogic.Abstractions
 
         public Task<Result<ScalesViewModel>> GetScalesAsync(string userId, int scalesId);
 
-        public Task<Result<IEnumerable<ScalesViewModel>>> GetAllScalesAsync(string userId, ScalesFilter filter);
+        public Task<PaginationViewModel<ScalesViewModel>> GetAllScalesAsync(string userId, ScalesFilter filter);
 
         public Task<Result<int>> DeleteScalesAsync(string userId, int scalesId);
     }

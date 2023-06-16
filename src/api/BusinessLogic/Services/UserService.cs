@@ -1,10 +1,12 @@
-﻿using AutoMapper;
+﻿using AutoFilterer.Extensions;
+using AutoMapper;
 using BusinessLogic.Abstractions;
 using BusinessLogic.Core;
 using BusinessLogic.Filtering;
 using BusinessLogic.Validators.AppUser;
 using BusinessLogic.ViewModels.AppUser;
 using BusinessLogic.ViewModels.Business;
+using BusinessLogic.ViewModels.General;
 using DataAccess.Abstractions;
 using DataAccess.Entities;
 using FluentResults;
@@ -174,33 +176,68 @@ namespace BusinessLogic.Services
                 : Result.Fail("Unable to delete worker");
         }
 
-        public async Task<Result<IEnumerable<UserViewModel>>> GetAllUsersAsync(UserFilter filter)
+        public async Task<PaginationViewModel<UserViewModel>> GetAllUsersAsync(UserFilter filter)
         {
             IEnumerable<AppUser> users;
+            var pages = 1;
+            var perPage = filter.PerPage;
             try
             {
                 users = await _userRepository.GetAllAsync(filter);
+                filter.Page = 1;
+                filter.PerPage = int.MaxValue;
+                pages = (await _userRepository.GetAllAsync(filter)).Count();
+                pages = (pages / perPage) 
+                    + (pages % perPage == 0
+                        ? 0
+                        : 1);
             }
             catch (Exception ex)
             {
-                return Result.Fail(ex.Message);
+                return new PaginationViewModel<UserViewModel>
+                {
+                    Data = Result.Fail(ex.Message),
+                    PageCount = 1,
+                };  
             }
 
             var response = _mapper.Map<IEnumerable<AppUser>, IEnumerable<UserViewModel>>(users);
 
-            return Result.Ok(response);
+            return new PaginationViewModel<UserViewModel>
+            {
+                Data = Result.Ok(response),
+                PageCount = pages
+            };
         }
 
-        public async Task<Result<IEnumerable<UserViewModel>>> GetAllWorkersAsync(string userId, UserFilter filter)
+        public async Task<PaginationViewModel<UserViewModel>> GetAllWorkersAsync(string userId, UserFilter filter)
         {
             var business = await _businessRepository.GetUserBusinessIncludingAll(userId);
             if (business is null)
             {
-                return Result.Fail("User not found");
+                return new PaginationViewModel<UserViewModel>
+                {
+                    Data = Result.Fail("User not found"),
+                    PageCount = 1
+                };
             }
 
-            var response = _mapper.Map<IEnumerable<AppUser>, IEnumerable<UserViewModel>>(business.Users);
-            return Result.Ok(response);
+            var perPage = filter.PerPage;
+            var workers = business.Users.AsQueryable().ApplyFilter(filter);
+            filter.Page = 1;
+            filter.PerPage = int.MaxValue;
+            var allCount = business.Users.AsQueryable().ApplyFilter(filter).Count();
+            var pages = (allCount / perPage) 
+                + (allCount % perPage == 0
+                    ? 0
+                    : 1);
+
+            var response = _mapper.Map<IEnumerable<AppUser>, IEnumerable<UserViewModel>>(workers);
+            return new PaginationViewModel<UserViewModel>
+            {
+                Data = Result.Ok(response),
+                PageCount = pages
+            };
         }
 
         public async Task<Result> UpdateAsync(string userId, UserUpdateModel model)
