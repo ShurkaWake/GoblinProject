@@ -26,6 +26,10 @@ export const authModule = {
             state.isAuth = true
         },
 
+        setFullName(state, fullname){
+            state.userFullName = fullname
+        },
+
         setAuth(state, status){
             state.isAuth = status
         },
@@ -75,6 +79,7 @@ export const authModule = {
                 token: "",
             })
             commit('setAuth', false)
+            axios.defaults.headers.common['Authorization'] = null
             commit('setLoading', false)
         }
     }

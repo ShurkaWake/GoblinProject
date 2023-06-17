@@ -19,5 +19,10 @@ namespace DataAccess.Entities
         public MoneyAmount Ammortization { get; set; }
 
         public ResourceStatus Status { get; set; } = ResourceStatus.Free;
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

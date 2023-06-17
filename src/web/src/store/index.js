@@ -4,10 +4,16 @@ import {dialogModule} from "@/store/dialogModule";
 
 export default createStore({
   state: {
+    currency: {
+      id: 2,
+      name: "USD"
+    }
   },
-  getters: {
-  },
+
   mutations: {
+    setCurrency(state, currency){
+      state.currency = currency
+    }
   },
   actions: {
   },

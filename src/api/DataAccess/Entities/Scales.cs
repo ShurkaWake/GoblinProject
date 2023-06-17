@@ -13,5 +13,10 @@ namespace DataAccess.Entities
         public Business Business { get; set; }
 
         public ICollection<Measurement> Measurements { get; set; }
+
+        public override string ToString()
+        {
+            return SerialNumber;
+        }
     }
 }

@@ -12,5 +12,10 @@ namespace DataAccess.Entities
         public string Role { get; set; }
 
         public ICollection<WorkingShift>? WorkingShifts { get; set;}
+
+        public override string ToString()
+        {
+            return FullName;
+        }
     }
 }

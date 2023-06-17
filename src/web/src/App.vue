@@ -1,13 +1,12 @@
 <template>
   <v-app>
-      <v-layout height="100%" width="100%">
+      <v-layout height="100%" width="100%" class="d-flex flex-column">
         <AppBar @drawer-click="changeDrawerState"/>
         <Drawer :drawer="drawer"></Drawer>
         <v-main>
-          <router-view/>
+          <router-view @closeDrawer="closeDrawer"/>
         </v-main>
       </v-layout>
-
       <v-dialog
           v-model="dialogState"
           width="auto">
@@ -26,7 +25,7 @@
 <script>
 import AppBar from "@/components/MainLayout/AppBar.vue";
 import Drawer from "@/components/MainLayout/Drawer.vue";
-import {mapMutations, mapState} from "vuex";
+import {mapActions, mapMutations, mapState} from "vuex";
 import router from "@/router";
 
 export default {
@@ -42,6 +41,10 @@ export default {
       this.drawer = !this.drawer
     },
 
+    closeDrawer() {
+      this.drawer = false
+    },
+
     closeDialog(){
       this.changeDialog()
       if (this.redirectPath !== ""){
@@ -51,6 +54,10 @@ export default {
 
     ...mapMutations({
       changeDialog:"switchDialog",
+    }),
+
+    ...mapActions({
+      logout:"logout"
     })
   },
 
@@ -58,8 +65,16 @@ export default {
     ...mapState({
       dialogState: state => state.dialog.dialog,
       message: state => state.dialog.message,
-      redirectPath: state => state.dialog.redirectPath
+      redirectPath: state => state.dialog.redirectPath,
+      isAuth: state => state.auth.isAuth
     }),
-  }
+  },
+
+  mounted() {
+    if (!this.isAuth){
+      router.push('/unauthorized')
+      this.logout()
+    }
+  },
 }
 </script>

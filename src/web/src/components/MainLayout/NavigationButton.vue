@@ -20,7 +20,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <router-link to="/song/create">
+  <router-link :to="link">
     <v-btn
         class="mt-4 justify-start"
         width="100%"
