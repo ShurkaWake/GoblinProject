@@ -17,5 +17,10 @@ namespace DataAccess.Entities
         public ICollection<Scales>? Scales { get; set; }
 
         public ICollection<Resource>? Resources { get; set; }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

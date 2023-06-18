@@ -17,5 +17,10 @@ namespace DataAccess.Entities
         public ICollection<Resource>? UsedResources { get; set; }
 
         public Measurement? Measurement { get; set; }
+
+        public override string ToString()
+        {
+            return Id.ToString();
+        }
     }
 }

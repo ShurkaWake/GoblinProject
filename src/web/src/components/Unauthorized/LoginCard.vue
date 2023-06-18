@@ -2,7 +2,6 @@
 import {mapActions, mapMutations, mapState} from "vuex";
 import {defineComponent} from "vue";
 import {useI18n} from "vue-i18n";
-import {th} from "vuetify/locale";
 
 export default defineComponent({
   setup() {

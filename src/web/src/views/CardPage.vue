@@ -1,6 +1,9 @@
-<script setup>
-
-import UnauthorizedCard from "@/components/Unauthorized/UnauthorizedCard.vue";
+<script>
+export default {
+  beforeRouteLeave(){
+    this.$emit('closeDrawer')
+  }
+}
 </script>
 
 <template>

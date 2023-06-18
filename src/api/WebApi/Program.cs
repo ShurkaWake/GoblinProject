@@ -17,6 +17,8 @@ var configuration = builder.Configuration;
 
 // Add services to the container.
 
+builder.Services.AddRazorPages();
+
 services
     .AddControllersWithViews()
     .AddJsonOptions(options => 
@@ -67,6 +69,8 @@ services.AddCors(c =>
     });
 });
 
+services.AddCoreAdmin();
+
 var app = builder.Build();
 
 await app.Services.CreateScope().ServiceProvider.GetRequiredService<ISeeder>().SeedAsync();
@@ -78,12 +82,16 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseStaticFiles();
+
 app.UseHttpsRedirection();
 app.UseCors("DefaultPolicy");
 
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapRazorPages();
 app.MapControllers();
+app.MapDefaultControllerRoute();
 
 app.Run();

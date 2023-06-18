@@ -14,5 +14,10 @@ namespace DataAccess.Entities
         public decimal Weight { get; set; }
 
         public DateTime DateTime { get; set; }
+
+        public override string ToString()
+        {
+            return Id.ToString();
+        }
     }
 }

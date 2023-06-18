@@ -10,7 +10,7 @@ This is an ERP System for Gold Mining. Created as university course project
 - Entity Framework Core code first
 - PostgreSQL
 - JWT Bearer authorization
-- FluentResults, FluentValidation, AutoMapper, AutoFilterer, PasswordGenerator
+- FluentResults, FluentValidation, AutoMapper, AutoFilterer, PasswordGenerator, CoreAdmin
 - MailKit for email sending
 
 ## IoT
@@ -18,5 +18,12 @@ This is an ERP System for Gold Mining. Created as university course project
 - MicroPython
 - HX711, LCD
 
+## Web
+- Vue 3
+- JavaScript
+- Vuetify
+- Vuex, Vue Router, Axios, Vue-chartjs
+- Component architecture
+
 ## Project status
-Development
+Lifecycle Ended
