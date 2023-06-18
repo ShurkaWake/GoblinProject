@@ -11,6 +11,7 @@ loadFonts()
 axios.defaults.baseURL = "https://localhost:7291/api"
 axios.defaults.headers.post['Content-Type'] = "application/json"
 
+
 createApp(App)
     .use(router)
     .use(store)

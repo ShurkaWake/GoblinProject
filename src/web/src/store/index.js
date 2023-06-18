@@ -7,12 +7,18 @@ export default createStore({
     currency: {
       id: 2,
       name: "USD"
-    }
+    },
+
+    dateFormat: "dd.MM.yyyy"
   },
 
   mutations: {
     setCurrency(state, currency){
       state.currency = currency
+    },
+
+    setDateFormat(state, format){
+      state.dateFormat = format
     }
   },
   actions: {

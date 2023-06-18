@@ -74,16 +74,31 @@ export default defineComponent({
           </v-card>
         </router-link>
 
-        <NavigationButton
-          link="/scales"
-          :text="t('scales')"
-          icon="mdi-scale-balance"
-        />
-        <NavigationButton
-          link="/workers"
-          :text="t('workers')"
-          icon="mdi-account-hard-hat"
-        />
+        <div v-if="role !== 'admin' && role !== 'foreman' ">
+          <NavigationButton
+            link="/scales"
+            :text="t('scales')"
+            icon="mdi-scale-balance"
+          />
+          <NavigationButton
+            link="/workers"
+            :text="t('workers')"
+            icon="mdi-account-hard-hat"
+          />
+          <NavigationButton
+              link="/statistics"
+              :text="t('statistics')"
+              icon="mdi-chart-bar"
+          />
+        </div>
+        <div v-if="role === 'admin'">
+          <NavigationButton
+              link="/business/add"
+              :text="t('createBusiness')"
+              icon="mdi-domain"
+          />
+        </div>
+
         <v-divider/>
         <NavigationButton
           link="/unauthorized"
@@ -101,11 +116,15 @@ export default defineComponent({
   "en": {
     "scales": "Scales",
     "workers": "Workers",
+    "statistics": "Statistics",
+    "createBusiness": "Create business",
     "logOut": "Log out"
   },
   "uk": {
     "scales": "Ваги",
     "workers": "Робітники",
+    "statistics": "Статистика",
+    "createBusiness": "Створити компанію",
     "logOut": "Вийти"
   }
 }

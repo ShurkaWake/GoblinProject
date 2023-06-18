@@ -7,6 +7,8 @@ import ScalesPage from "@/views/ScalesPage.vue";
 import ScalesAddCard from "@/components/Scales/ScalesAddCard.vue";
 import WorkersPage from "@/views/WorkersPage.vue";
 import WorkerCreateCard from "@/components/Worker/WorkerCreateCard.vue";
+import StatisticsPage from "@/views/StatisticsPage.vue";
+import BusinessCreateCard from "@/components/Business/BusinessCreateCard.vue";
 
 const routes = [
   {
@@ -29,6 +31,10 @@ const routes = [
       {
         path: "/workers/add",
         component: WorkerCreateCard
+      },
+      {
+        path: "/business/add",
+        component: BusinessCreateCard
       }
     ]
   },
@@ -41,6 +47,10 @@ const routes = [
     path: '/scales',
     name: 'scales',
     component: ScalesPage
+  },
+  {
+    path: '/statistics',
+    component: StatisticsPage
   },
   {
     path: '/workers',

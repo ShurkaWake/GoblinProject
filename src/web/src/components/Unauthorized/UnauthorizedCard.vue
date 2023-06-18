@@ -1,6 +1,7 @@
 <script>
   import {defineComponent} from "vue";
   import {useI18n} from 'vue-i18n'
+  import {mapActions} from "vuex";
 
   export default defineComponent({
     setup() {
@@ -11,6 +12,16 @@
       })
 
       return { t }
+    },
+
+    methods: {
+      ...mapActions({
+        logout: "logout"
+      })
+    },
+
+    mounted() {
+      this.logout()
     }
   })
 </script>

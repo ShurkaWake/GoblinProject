@@ -6,9 +6,10 @@ import BusinessCard from "@/components/Business/BusinessCard.vue"
 import ChangePasswordCard from "@/components/User/ChangePasswordCard.vue";
 import ChangeFullNameCard from "@/components/User/ChangeFullNameCard.vue";
 import CurrencySelector from "@/components/User/CurrencySelector.vue";
+import DateSelector from "@/components/User/DateSelector.vue";
 
 export default defineComponent({
-  components: {CurrencySelector, BusinessCard, ChangePasswordCard, ChangeFullNameCard},
+  components: {CurrencySelector, BusinessCard, ChangePasswordCard, ChangeFullNameCard, DateSelector},
 
   setup() {
     const {t} = useI18n({
@@ -52,6 +53,11 @@ export default defineComponent({
         :title="this.t('chooseCurrency')">
       <CurrencySelector/>
     </v-card>
+    <v-card
+        class="pa-2 ma-4"
+        :title="this.t('chooseDateFormat')">
+      <DateSelector/>
+    </v-card>
   </v-col>
 </v-container>
 </template>
@@ -62,13 +68,15 @@ export default defineComponent({
     "owner": "Owner",
     "manager": "Manager",
     "admin": "Admin",
-    "chooseCurrency": "Choose currency used in app"
+    "chooseCurrency": "Choose currency used in app",
+    "chooseDateFormat": "Choose date format used in app"
   },
   "uk": {
     "owner": "Власник",
     "manager": "Управляючий",
     "admin": "Адміністратор",
-    "chooseCurrency": "Виберіть валюту у якій бажаєте бачити статистику"
+    "chooseCurrency": "Виберіть валюту у якій бажаєте бачити статистику",
+    "chooseDateFormat": "Оберіть формат дати, який бажаєте бачити"
   }
 }
 </i18n>
