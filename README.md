@@ -22,6 +22,7 @@ This is an ERP System for Gold Mining. Created as university course project
 - Vue 3
 - JavaScript
 - Vuetify
+- Vue-i18n localization
 - Vuex, Vue Router, Axios, Vue-chartjs
 - Component architecture
 
