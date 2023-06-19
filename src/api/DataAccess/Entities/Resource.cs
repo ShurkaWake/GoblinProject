@@ -20,6 +20,8 @@ namespace DataAccess.Entities
 
         public ResourceStatus Status { get; set; } = ResourceStatus.Free;
 
+        public ICollection<WorkingShift> usedIn { get; set; }
+
         public override string ToString()
         {
             return Name;

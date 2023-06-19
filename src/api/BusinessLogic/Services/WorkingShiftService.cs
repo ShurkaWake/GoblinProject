@@ -162,7 +162,13 @@ namespace BusinessLogic.Services
                 return Result.Fail("Working shift not found");
             }
 
+            foreach (var resource in workingShift.UsedResources)
+            {
+                resource.Status = ResourceStatus.Free;
+            }
+
             job.WorkingShifts.Remove(workingShift);
+
             return (await _businessRepository.ConfirmAsync()) > 0
                 ? Result.Ok()
                 : Result.Fail("Failed to delete working shift");

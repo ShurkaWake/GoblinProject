@@ -56,7 +56,7 @@ namespace WebApi.Extenstions
                 .AddTransient<IScalesRepository, ScalesRepository>()
                 .AddTransient<IBusinessService, BusinessService>()
                 .AddTransient<IEmailService, EmailService>()
-                .AddTransient<IExchangeService, ExchangeService>()
+                .AddSingleton<IExchangeService, ExchangeService>()
                 .AddTransient<IHashService, HashService>()
                 .AddTransient<IMeasurementService, MeasurementService>()
                 .AddTransient<IResourceService, ResourceService>()

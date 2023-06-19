@@ -39,6 +39,7 @@ namespace WebApi.Controllers
                 to = DateTime.Now;
             }
 
+            to = to.Value.AddDays(1);
             var user = await _userManager.GetUserAsync(User);
             var result = await _statisticService.GetWorkingShiftsStatisticsAsync(
                 user.Id, 

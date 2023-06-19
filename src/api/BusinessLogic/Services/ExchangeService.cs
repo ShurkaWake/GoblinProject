@@ -9,74 +9,56 @@ namespace BusinessLogic.Services
 {
     public class ExchangeService : IExchangeService
     {
-        private const string NbuApiUrl = "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json&valcode={0}";
+        private const string NbuApiUrl = "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json";
+        private Dictionary<string, decimal> rates = new Dictionary<string, decimal>();
+        private DateTime lastFetch;
+
+        public ExchangeService()
+        {
+            FetchRateToUahAsync().Wait();
+        }
 
         public async Task<Result<decimal>> ExchangeAsync(MoneyAmount from, Currency to)
         {
-            var rateFrom = await GetRateToUahAsync(from.Currency);
-            if (rateFrom.IsFailed)
+            if (DateTime.Now - lastFetch > TimeSpan.FromHours(1))
             {
-                return Result.Fail(rateFrom.Errors);
+                FetchRateToUahAsync().Wait();
             }
 
-            var rateTo = await GetRateToUahAsync(to);
-            if (rateTo.IsFailed)
-            {
-                return Result.Fail(rateFrom.Errors);
-            }
+            var rateFrom = rates[from.Currency.ToString()];
+            var rateTo = rates[to.ToString()];
 
-            return from.Amount * (rateFrom.Value / rateTo.Value);
+            return from.Amount * (rateFrom / rateTo);
         }
 
         public async Task<Result<decimal>> GetGoldPriceAsync(decimal ozGold, Currency to)
         {
-            var rateFrom = await GetGoldRateUah();
-            if (rateFrom.IsFailed)
+            if (DateTime.Now - lastFetch > TimeSpan.FromHours(1))
             {
-                return Result.Fail(rateFrom.Errors);
+                FetchRateToUahAsync().Wait();
             }
 
-            var rateTo = await GetRateToUahAsync(to);
-            if (rateTo.IsFailed)
-            {
-                return Result.Fail(rateFrom.Errors);
-            }
-
-            return ozGold * (rateFrom.Value / rateTo.Value);
+            var rateFrom = rates["XAU"];
+            var rateTo = rates[to.ToString()];
+            return ozGold * (rateFrom / rateTo);
         }
 
-        private async Task<Result<decimal>> GetRateToUahAsync(Currency currency)
-        {
-            if (currency == Currency.UAH)
-            {
-                return 1;
-            }
-
-            try
-            {
-                var client = new HttpClient();
-                var requestUrl = string.Format(NbuApiUrl, currency.ToString());
-                var response = (await client.GetFromJsonAsync<IEnumerable<NbuResponseModel>>(requestUrl))
-                    .FirstOrDefault();
-
-                return Result.Ok(response.Rate);
-            }
-            catch
-            {
-                return Result.Fail("Unable to get exchange rates from bank.gov.ua");
-            }
-        }
-
-        private async Task<Result<decimal>> GetGoldRateUah()
+        private async Task<Result> FetchRateToUahAsync()
         {
             try
             {
                 var client = new HttpClient();
-                var requestUrl = string.Format(NbuApiUrl, "XAU");
-                var response = (await client.GetFromJsonAsync<IEnumerable<NbuResponseModel>>(requestUrl))
-                    .FirstOrDefault();
+                rates = new Dictionary<string, decimal>();
+                var response = await client.GetFromJsonAsync<IEnumerable<NbuResponseModel>>(NbuApiUrl);
+                rates.Add("UAH", 1m);
+                lastFetch = DateTime.Now;
 
-                return Result.Ok(response.Rate);
+                foreach (var item in response)
+                {
+                    rates.Add(item.Cc, item.Rate);
+                }
+
+                return Result.Ok();
             }
             catch
             {

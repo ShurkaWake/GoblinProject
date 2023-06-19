@@ -29,7 +29,7 @@ namespace BusinessLogic.Services
             {
                 return Result.Fail("User not found");
             }
-            var workingShifts = business.WorkingShifts.Where(x => x.Start > from && x.Start < to).OrderBy(x => x.Start);
+            var workingShifts = business.WorkingShifts.Where(x => x.Start >= from && x.Start <= to).OrderBy(x => x.Start);
             IEnumerable<string> errors = new List<string>();
             IEnumerable<StatisticViewModel> response = new List<StatisticViewModel>();
 
