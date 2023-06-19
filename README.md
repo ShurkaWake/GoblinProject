@@ -26,4 +26,4 @@ This is an ERP System for Gold Mining. Created as university course project
 - Component architecture
 
 ## Project status
-Development
+Lifecycle Ended
